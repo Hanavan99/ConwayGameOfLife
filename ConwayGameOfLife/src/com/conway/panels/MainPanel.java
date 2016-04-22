@@ -15,8 +15,8 @@ public class MainPanel extends AbstractPanel {
 	public MainPanel() {
 		setBounds(0, 0, 1920, 1080);
 		JLabel title = new JLabel("Conway's Game Of Life");
-		getUIConfig("title").applyBoundsToComponent(title);
-		title.setFont(getUIConfig("title").getFont());
+		getUIManager().getUIConfig("title").applyBoundsToComponent(title);
+		title.setFont(getUIManager().getUIConfig("title").getFont());
 		title.setHorizontalAlignment(JLabel.CENTER);
 		add(title);
 	}

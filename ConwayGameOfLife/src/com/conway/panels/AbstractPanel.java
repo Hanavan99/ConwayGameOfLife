@@ -24,8 +24,8 @@ public abstract class AbstractPanel extends JPanel {
 		
 	}
 	
-	public UIConfig getUIConfig(String name) {
-		return manager.getUIConfig(name);
+	public UIManager getUIManager() {
+		return manager;
 	}
 
 }

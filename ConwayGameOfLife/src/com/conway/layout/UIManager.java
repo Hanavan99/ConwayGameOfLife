@@ -2,6 +2,7 @@ package com.conway.layout;
 
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.HashMap;
 
 public class UIManager {
@@ -26,6 +27,14 @@ public class UIManager {
 			currentLayoutID = 0;
 		}
 		currentLayout = (String) UIs.keySet().toArray()[currentLayoutID];
+	}
+	
+	public int getScreenWidth() {
+		return (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+	}
+	
+	public int getScreenHeight() {
+		return (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	}
 
 }
