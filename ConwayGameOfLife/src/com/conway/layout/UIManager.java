@@ -12,8 +12,16 @@ public class UIManager {
 	private int currentLayoutID = 0;
 
 	public UIManager() {
+		resetUI();
+	}
+	
+	public void resetUI() {
 		HashMap<String, UIConfig> layout_default = new HashMap<String, UIConfig>();
-		layout_default.put("title", new UIConfig(null, new Font("Arial", Font.PLAIN, 72), new Rectangle(0, 0, 1920, 200)));
+		layout_default.put("main_title", new UIConfig(null, new Font("Arial", Font.PLAIN, 72), new Rectangle(0, 0, getScreenWidth(), 100)));
+		layout_default.put("main_button1", new UIConfig(null, null, new Rectangle(getRelScreenWidth(0.5d) - 100, getRelScreenHeight(0.2d), 200, 30)));
+		layout_default.put("main_button2", new UIConfig(null, null, new Rectangle(getRelScreenWidth(0.5d) - 100, getRelScreenHeight(0.2d) + 40, 200, 30)));
+		layout_default.put("main_button3", new UIConfig(null, null, new Rectangle(getRelScreenWidth(0.5d) - 100, getRelScreenHeight(0.2d) + 80, 200, 30)));
+		layout_default.put("main_button4", new UIConfig(null, null, new Rectangle(getRelScreenWidth(0.5d) - 100, getRelScreenHeight(0.2d) + 120, 200, 30)));
 		UIs.put("default", layout_default);
 	}
 
@@ -22,6 +30,7 @@ public class UIManager {
 	}
 
 	public void changeLayout() {
+		resetUI();
 		currentLayoutID++;
 		if (UIs.keySet().size() <= currentLayoutID) {
 			currentLayoutID = 0;
@@ -35,6 +44,14 @@ public class UIManager {
 	
 	public int getScreenHeight() {
 		return (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+	}
+	
+	private int getRelScreenWidth(double percent) {
+		return (int) (getScreenWidth() * percent);
+	}
+	
+	private int getRelScreenHeight(double percent) {
+		return (int) (getScreenHeight() * percent);
 	}
 
 }
