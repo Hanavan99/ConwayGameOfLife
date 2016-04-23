@@ -15,6 +15,7 @@ public class Main {
 		gamewindow = new JFrame("Conway's Game Of Life");
 		gamewindow.setLayout(null);
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		gamewindow.setUndecorated(true);
 		gamewindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gamewindow.setVisible(true);
 		PanelManager.setParentFrame(gamewindow);

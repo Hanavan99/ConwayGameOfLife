@@ -2,7 +2,6 @@ package com.conway.panels;
 
 import javax.swing.JPanel;
 
-import com.conway.layout.UIConfig;
 import com.conway.layout.UIManager;
 
 public abstract class AbstractPanel extends JPanel {
