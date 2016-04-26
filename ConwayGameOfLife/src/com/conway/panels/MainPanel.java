@@ -1,7 +1,10 @@
 package com.conway.panels;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 /**
  * The main menu panel.
@@ -37,6 +40,11 @@ public class MainPanel extends AbstractPanel {
 		getUIManager().getUIConfig("main_button4").applyBoundsToComponent(exit);
 		exit.setFont(getUIManager().getUIConfig("main_button4").getFont());
 		add(exit);
+		exit.addActionListener((ActionEvent e) -> {
+			if (JOptionPane.showConfirmDialog(this, "Are you sure you want to quit?") == JOptionPane.OK_OPTION) {
+				System.exit(0);
+			}
+		});
 	}
 	
 }
