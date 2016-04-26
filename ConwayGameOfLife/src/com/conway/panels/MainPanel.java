@@ -15,6 +15,7 @@ public class MainPanel extends AbstractPanel {
 
 	public MainPanel() {
 		setBounds(0, 0, getUIManager().getScreenWidth(), getUIManager().getScreenHeight());
+		setLayout(null);
 		JLabel title = new JLabel("Conway's Game Of Life");
 		getUIManager().getUIConfig("main_title").applyBoundsToComponent(title);
 		title.setFont(getUIManager().getUIConfig("main_title").getFont());
@@ -24,22 +25,18 @@ public class MainPanel extends AbstractPanel {
 		JButton multiJoin = new JButton("Join Multiplayer Game");
 		JButton singleCreate = new JButton("Singleplayer Game");
 		JButton exit = new JButton("Exit");
-		getUIManager().getUIConfig("main_button1").applyBoundsToComponent(title);
+		getUIManager().getUIConfig("main_button1").applyBoundsToComponent(multiCreate);
 		multiCreate.setFont(getUIManager().getUIConfig("main_button1").getFont());
-		multiCreate.setHorizontalAlignment(JLabel.CENTER);
 		add(multiCreate);
-		getUIManager().getUIConfig("main_button2").applyBoundsToComponent(title);
+		getUIManager().getUIConfig("main_button2").applyBoundsToComponent(multiJoin);
 		multiJoin.setFont(getUIManager().getUIConfig("main_button2").getFont());
-		multiJoin.setHorizontalAlignment(JLabel.CENTER);
-		add(multiCreate);
-		getUIManager().getUIConfig("main_button3").applyBoundsToComponent(title);
+		add(multiJoin);
+		getUIManager().getUIConfig("main_button3").applyBoundsToComponent(singleCreate);
 		singleCreate.setFont(getUIManager().getUIConfig("main_button3").getFont());
-		singleCreate.setHorizontalAlignment(JLabel.CENTER);
 		add(singleCreate);
-		getUIManager().getUIConfig("main_button4").applyBoundsToComponent(title);
-		singleCreate.setFont(getUIManager().getUIConfig("main_button4").getFont());
-		singleCreate.setHorizontalAlignment(JLabel.CENTER);
-		add(singleCreate);
+		getUIManager().getUIConfig("main_button4").applyBoundsToComponent(exit);
+		exit.setFont(getUIManager().getUIConfig("main_button4").getFont());
+		add(exit);
 	}
 	
 }
