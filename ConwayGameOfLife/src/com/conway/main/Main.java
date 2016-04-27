@@ -2,9 +2,11 @@ package com.conway.main;
 
 import javax.swing.JFrame;
 
+import com.conway.net.GamePacket;
 import com.conway.panels.AbstractPanel;
 import com.conway.panels.MainPanel;
 import com.conway.panels.PanelManager;
+import com.conway.util.Vector2D;
 
 public class Main {
 
@@ -20,6 +22,13 @@ public class Main {
 		gamewindow.setVisible(true);
 		PanelManager.setParentFrame(gamewindow);
 		PanelManager.addPanel("main", new MainPanel());
+		
+		//testing area
+		Vector2D[] v2d = {new Vector2D(3, 1)};
+		GamePacket p = new GamePacket(v2d);
+		byte[] data = p.serialize();
+		GamePacket p2 = new GamePacket(data);
+		System.out.println(p2.getUpdates()[0].getX());
 	}
 
 }
