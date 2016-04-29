@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.util.function.Supplier;
 
 /**
  * The <code>UIConfig</code> class stores information about the UI. This can
@@ -16,7 +17,7 @@ public class UIConfig {
 
 	private final Color color;
 	private final Font font;
-	private final Rectangle bounds;
+	private final Supplier<Rectangle> bounds;
 	
 	/**
 	 * Instantiates a new <code>UIConfig</code> class with the specified color, font, and bounds.
@@ -25,9 +26,14 @@ public class UIConfig {
 	 * @param bounds The bounds
 	 */
 	public UIConfig(Color color, Font font, Rectangle bounds) {
-		this.color = color;
-		this.font = font;
-		this.bounds = bounds;
+	    this(color, font, () -> bounds);
+	    System.err.println("Wrong ctor");
+	}
+	
+	public UIConfig(Color color, Font font, Supplier<Rectangle> bounds) {
+        this.color = color;
+        this.font = font;
+        this.bounds = bounds;
 	}
 	
 	/**
@@ -43,7 +49,7 @@ public class UIConfig {
 	}
 	
 	public Rectangle getBounds() {
-		return bounds;
+		return bounds.get();
 	}
 	
 	/**
@@ -51,10 +57,11 @@ public class UIConfig {
 	 * @param c The <code>Component</code> to apply the layout to
 	 */
 	public void applyBoundsToComponent(Component c) {
-		c.setBounds(bounds);
+		c.setBounds(getBounds());
 	}
 	
 	public void applyBoundsToComponent(Component c, boolean useX, boolean useY, boolean useWidth, boolean useHeight) {
+	    Rectangle bounds = getBounds();
 		c.setBounds(useX ? bounds.x : null, useY ? bounds.y : null, useWidth ? bounds.width : null, useHeight ? bounds.height : null);
 	}
 }

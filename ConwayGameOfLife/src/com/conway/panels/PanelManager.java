@@ -1,5 +1,6 @@
 package com.conway.panels;
 
+import java.awt.BorderLayout;
 import java.util.HashMap;
 
 import javax.swing.JFrame;
@@ -17,7 +18,7 @@ public class PanelManager {
 	 */
 	public static void addPanel(String name, AbstractPanel panel) {
 		panels.put(name, panel);
-		parentframe.add(panel);
+		parentframe.add(panel, BorderLayout.CENTER);
 	}
 
 	/**

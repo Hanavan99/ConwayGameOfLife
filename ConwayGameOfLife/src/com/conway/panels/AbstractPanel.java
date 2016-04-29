@@ -1,5 +1,7 @@
 package com.conway.panels;
 
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
 import javax.swing.JPanel;
 
 import com.conway.layout.UIManager;
@@ -25,5 +27,18 @@ public abstract class AbstractPanel extends JPanel {
 	    }
 		return manager;
 	}
-
+	
+	public AbstractPanel() {
+	    addHierarchyBoundsListener(new HierarchyBoundsListener() {
+            @Override
+            public void ancestorResized(HierarchyEvent e) {
+                invalidate();
+            }
+            
+            @Override
+            public void ancestorMoved(HierarchyEvent e) {
+                invalidate();
+            }
+        });
+	}
 }

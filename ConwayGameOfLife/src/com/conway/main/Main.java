@@ -1,5 +1,6 @@
 package com.conway.main;
 
+import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import com.conway.layout.UILookAndFeel;
 import com.conway.net.GamePacket;
@@ -13,7 +14,7 @@ public class Main {
 	public static void main(String[] args) {
 	    UILookAndFeel.init();
 		gamewindow = new JFrame("Conway's Game Of Life");
-		gamewindow.setLayout(null);
+		gamewindow.setLayout(new BorderLayout());
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		gamewindow.setUndecorated(true);
 		gamewindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
