@@ -1,10 +1,9 @@
 package com.conway.layout;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Rectangle;
-
-import javax.swing.JComponent;
 
 /**
  * The <code>UIConfig</code> class stores information about the UI. This can
@@ -48,14 +47,14 @@ public class UIConfig {
 	}
 	
 	/**
-	 * Applies this layout to the specified <code>JComponent</code>.
-	 * @param c The <code>JComponent</code> to apply the layout to
+	 * Applies this layout to the specified <code>Component</code>.
+	 * @param c The <code>Component</code> to apply the layout to
 	 */
-	public void applyBoundsToComponent(JComponent c) {
+	public void applyBoundsToComponent(Component c) {
 		c.setBounds(bounds);
 	}
 	
-	public void applyBoundsToComponent(JComponent c, boolean useX, boolean useY, boolean useWidth, boolean useHeight) {
+	public void applyBoundsToComponent(Component c, boolean useX, boolean useY, boolean useWidth, boolean useHeight) {
 		c.setBounds(useX ? bounds.x : null, useY ? bounds.y : null, useWidth ? bounds.width : null, useHeight ? bounds.height : null);
 	}
 }

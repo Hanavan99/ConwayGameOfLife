@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.HashMap;
+import javax.swing.JComponent;
 
 public class UIManager {
 
@@ -26,6 +27,10 @@ public class UIManager {
 		layout_default.put("main_button3", new UIConfig(null, null, new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 80, 200, 30)));
 		layout_default.put("main_button4", new UIConfig(null, null, new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 120, 200, 30)));
 		UIs.put("default", layout_default);
+		if ( comp instanceof JComponent ) {
+		    ((JComponent) comp).setLayout(new UILayout(this));
+		}
+		comp.invalidate();
 	}
 
 	public UIConfig getUIConfig(String name) {
