@@ -1,5 +1,6 @@
 package com.conway.panels;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
@@ -18,6 +19,7 @@ public class MainPanel extends AbstractPanel {
 
 	public MainPanel() {
 		setBounds(0, 0, getUIManager().getScreenWidth(), getUIManager().getScreenHeight());
+		getUIManager().resetUI();
 		setLayout(null);
 		JLabel title = new JLabel("Conway's Game Of Life");
 		getUIManager().getUIConfig("main_title").applyBoundsToComponent(title);
@@ -45,6 +47,7 @@ public class MainPanel extends AbstractPanel {
 				System.exit(0);
 			}
 		});
+		repaint();
 	}
 	
 }

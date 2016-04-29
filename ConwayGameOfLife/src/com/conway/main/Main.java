@@ -3,7 +3,6 @@ package com.conway.main;
 import javax.swing.JFrame;
 
 import com.conway.net.GamePacket;
-import com.conway.panels.AbstractPanel;
 import com.conway.panels.MainPanel;
 import com.conway.panels.PanelManager;
 import com.conway.util.Vector2D;
@@ -13,7 +12,6 @@ public class Main {
 	public static JFrame gamewindow;
 	
 	public static void main(String[] args) {
-		AbstractPanel.init();
 		gamewindow = new JFrame("Conway's Game Of Life");
 		gamewindow.setLayout(null);
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
