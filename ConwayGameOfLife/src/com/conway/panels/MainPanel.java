@@ -1,8 +1,6 @@
 package com.conway.panels;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
