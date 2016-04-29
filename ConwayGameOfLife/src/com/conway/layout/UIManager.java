@@ -1,9 +1,13 @@
 package com.conway.layout;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.util.HashMap;
 import javax.swing.JComponent;
 
@@ -15,6 +19,9 @@ public class UIManager {
 	private final Component comp;
 
 	public UIManager(Component comp) {
+	    if ( !(comp instanceof JComponent || comp instanceof Container) ) {
+	        throw new IllegalArgumentException("Invalid component to manage");
+	    }
 	    this.comp = comp;
 		resetUI();
 	}
@@ -29,6 +36,31 @@ public class UIManager {
 		UIs.put("default", layout_default);
 		if ( comp instanceof JComponent ) {
 		    ((JComponent) comp).setLayout(new UILayout(this));
+		} else if ( comp instanceof Container ) {
+		    Runnable relayout = () -> {
+	            UILayout layout = new UILayout(this);
+		        for ( Component c : ((Container) comp).getComponents() ) {
+		            layout.addLayoutComponent(c, c.getName());
+		        }
+		        layout.layoutContainer((Container) comp);
+		    };
+		    comp.addHierarchyBoundsListener(new HierarchyBoundsListener() {
+                @Override
+                public void ancestorMoved(HierarchyEvent e) {
+                    relayout.run();
+                }
+
+                @Override
+                public void ancestorResized(HierarchyEvent e) {
+                    relayout.run();
+                }
+		    });
+		    comp.addHierarchyListener(new HierarchyListener() {
+                @Override
+                public void hierarchyChanged(HierarchyEvent e) {
+                    relayout.run();
+                }
+            });
 		}
 		comp.invalidate();
 	}
