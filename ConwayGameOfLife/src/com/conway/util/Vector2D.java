@@ -1,12 +1,14 @@
 package com.conway.util;
 
+import java.io.Serializable;
+
 /**
  * This class is similar to <code>Point</code>, but it is better.
  * 
  * @author Hanavan Kuhn
  *
  */
-public class Vector2D {
+public class Vector2D implements Serializable {
 
 	private int x;
 	private int y;
