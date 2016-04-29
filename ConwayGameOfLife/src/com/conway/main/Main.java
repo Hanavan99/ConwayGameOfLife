@@ -1,17 +1,17 @@
 package com.conway.main;
 
 import javax.swing.JFrame;
-
+import com.conway.layout.UILookAndFeel;
 import com.conway.net.GamePacket;
 import com.conway.panels.MainPanel;
 import com.conway.panels.PanelManager;
 import com.conway.util.Vector2D;
 
 public class Main {
-
 	public static JFrame gamewindow;
 	
 	public static void main(String[] args) {
+	    UILookAndFeel.init();
 		gamewindow = new JFrame("Conway's Game Of Life");
 		gamewindow.setLayout(null);
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -28,5 +28,4 @@ public class Main {
 		GamePacket p2 = new GamePacket(data);
 		System.out.println(p2.getUpdates()[0].getX());
 	}
-
 }
