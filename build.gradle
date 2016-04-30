@@ -43,6 +43,14 @@ task stage {
 	dependsOn deployJar
 }
 
+jar {
+	manifest {
+		attributes "Permissions": "sandbox",
+			"Codebase": "hanavan99.github.io",
+			"Application-Name": "Conway's Game of Life"
+	}
+}
+
 build {
 	dependsOn stage
 }
