@@ -38,8 +38,29 @@ task deployJar(type: Jar) {
 	dependsOn jar
 }
 
-task stage {
+task appletJar {
+	AntBuilder ant = getAnt()
+	File keystore = new File("deploy.jks")
+	File unsignedJar = jar.archivePath
+	File signedJar = new File(unsignedJar.getParentFile(), "applet.jar")
+	getInputs().file(unsignedJar)
+	getOutputs().file(signedJar).upToDateWhen {
+		return unsignedJar.exists() && signedJar.exists() && unsignedJar.lastModified() < signedJar.lastModified()
+	}
+	doLast {
+		ant.signjar(
+			jar: unsignedJar.getAbsolutePath(),
+			alias: "deploy",
+			keystore: keystore.getAbsolutePath(),
+			storepass: System.getenv("KEYSTOREPASS"),
+			signedjar: signedJar.getAbsolutePath()
+		)
+	}
 	dependsOn jar
+}
+
+task stage {
+	dependsOn appletJar
 	dependsOn deployJar
 }
 

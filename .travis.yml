@@ -1,8 +1,16 @@
 language: java
 jdk:
 - oraclejdk8
+env:
+  global:
+  - secure: Cy91T7xJzb9bbWGR9NqXd6VDNKYr/rpxh+tvisbLRx9w2ggOJ8WXCjPXLOlzZeFbe5rn7IbM4Fi6rwwZuclGSOrM8bZVmndyvV7ffyK5D+0D0TZHhkezOm62/t8YNnwBZjRYYFQsKr1KaSFMoww8KMB8TTE2+cucVBxlE8E1yejP58jyHErO7gfoOuKB+YSUgixJeEtjOrcgtauZyEjydIWdTXLuOJljatuWh2ia+WpREkoXPYMjDhz5Dbn9wmLcZdnjNPOj01tfDadSlBDTyr93AhShGGTmD5hXRdZVgah2e1RFLy7Lsee8m4qzURPkbXZ/4CqqWo6Fmk+djDx8YnaVRetpfgNEqG/V4sMamW69XnEdxcSxpZVNFhypaYRnfaWOfzeVORZX82Izb5KDpC9LIC5kw9r/aSCZJdt7OFWIVBQh9gXivJhQ2gyH+kxFgYbgcRmudaWFbe+ByiprOGVdDMxBvBOKe7Ca4YUQV+eHgnKH7Dssu3c/zwwMvdAXbRuHko8UOp4rlz1L1AdoWAHK04WOHuF86fJKWcEahdbwyV7s5N5PIWDd2uq9LCxZiX+UZD4UgtO8iPy7Ziyi4eRUO7pgagjcIIDW99Yh2EHI07yC26VFo4B9OerRhmcz1Ko//370K+7nXZmXDkJSJzO27yCA2o20W/gI4LqHT1s=
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+before_install:
+- openssl aes-256-cbc -K $encrypted_1f5983423251_key -iv $encrypted_1f5983423251_iv -in deploy.jks.enc -out deploy.jks -d
+install: ./gradlew assemble appletJar
+before_script:
+- rm -f deploy.jks
 cache:
   directories:
   - "$HOME/.gradle/caches/"
