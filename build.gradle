@@ -60,7 +60,7 @@ task appletJar {
 }
 
 task stage {
-	dependsOn appletJar
+	//dependsOn appletJar
 	dependsOn deployJar
 }
 
