@@ -1,0 +1,7 @@
+apply plugin: "java"
+
+task run(type: JavaExec) {
+	main = "com.conway.main.Main"
+	classpath = sourceSets.main.runtimeClasspath
+	dependsOn classes
+}
