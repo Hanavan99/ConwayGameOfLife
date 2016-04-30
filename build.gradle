@@ -1,5 +1,9 @@
 apply plugin: "java"
 
+dependencies {
+	compile files("lib/GUILogger.jar")
+}
+
 task run(type: JavaExec) {
 	main = "com.conway.main.Main"
 	classpath = sourceSets.main.runtimeClasspath
