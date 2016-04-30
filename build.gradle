@@ -15,3 +15,7 @@ task run(type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	dependsOn classes
 }
+
+task stage {
+	dependsOn build
+}
