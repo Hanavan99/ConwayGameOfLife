@@ -1,14 +1,13 @@
 package com.conway.panels;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.util.HashMap;
-
-import javax.swing.JFrame;
 
 public class PanelManager {
 
 	private static HashMap<String, AbstractPanel> panels = new HashMap<String, AbstractPanel>();
-	private static JFrame parentframe;
+	private static Container parentframe;
 
 	/**
 	 * Adds a new panel to this <code>PanelManager</code>.
@@ -38,7 +37,7 @@ public class PanelManager {
 	 * 
 	 * @param frame The frame to set as the parent frame
 	 */
-	public static void setParentFrame(JFrame frame) {
+	public static void setParentFrame(Container frame) {
 		parentframe = frame;
 	}
 
