@@ -1,7 +1,7 @@
 var attr = {
 	code: "components.DynamicTreeApplet",
-	width: 640,
-	height: 480
+	width: screen.availWidth,
+	height: screen.availHeight
 };
 var params = {
 	jnlp_href: "applet.jnlp"
