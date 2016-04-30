@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="" href="">
+	<information>
+		<title>Conway's Game of Life</title>
+	</information>
+	<resources>
+		<j2se version="1.8+" href="http://java.sun.com/products/autodl/j2se" />
+		<jar href="//conway-game-of-life.herokuapp.com/build/libs/ConwayGameOfLife.jar" />
+	</resources>
+	<applet-desc name="Conway's Game of Life" main-class="com.conway.main.AppletMain" width="640" height="480" />
+	<update check="background" />
+</jnlp>
