@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration packages="com.conway.logging">
+	<Appenders>
+		<Console name="Console">
+			<PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] %msg%n" />
+		</Console>
+		<GUILogger name="GUI">
+			<PatternLayout pattern="[%d{HH:mm:ss.SSS}] [%t/%level] %msg%n" />
+		</GUILogger>
+	</Appenders>
+	<Loggers>
+		<Root level="all">
+			<AppenderRef ref="Console" level="info" />
+			<AppenderRef ref="GUI" level="trace" />
+		</Root>
+		<!--
+			How to debug a certain class (or package):
+			
+			<Logger name="FULLY QUALIFIED CLASS OR PACKAGE HERE" level="all" additivity="false">
+				<AppenderRef ref="Console" level="info" />
+			</Logger>
+			
+			All logging statements from that class (even trace) will be logged into latest.log
+			Please do not commit these changes EVER!
+		-->
+	</Loggers>
+</Configuration>

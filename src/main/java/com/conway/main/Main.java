@@ -17,6 +17,7 @@ public class Main {
 		LogManager.useLogger(true);
 		LogManager.init();
 		LogManager.log("debug", "Logger initialized");
+		org.apache.logging.log4j.LogManager.getLogger().info("Hello, world!");
 		gamewindow = new JFrame("Conway's Game Of Life");
 		gamewindow.setLayout(new BorderLayout());
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
