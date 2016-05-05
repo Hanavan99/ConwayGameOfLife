@@ -1,4 +1,5 @@
 apply plugin: "java"
+apply plugin: "eclipse"
 
 sourceSets {
 	deploy
@@ -13,6 +14,22 @@ dependencies {
 	compile "org.apache.logging.log4j:log4j-api:2.5"
 	compile "org.apache.logging.log4j:log4j-core:2.5"
 	deployCompile "com.sparkjava:spark-core:2.2"
+}
+
+configurations {
+	eclipseCP {
+		dependencies {
+			compile "com.sparkjava:spark-core:2.2"
+		}
+	}
+}
+
+eclipse {
+	classpath {
+		downloadSources = true
+		downloadJavadoc = true
+		plusConfigurations += configurations.eclipseCP
+	}
 }
 
 task run(type: JavaExec) {
