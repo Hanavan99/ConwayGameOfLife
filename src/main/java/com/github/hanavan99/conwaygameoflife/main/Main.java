@@ -39,7 +39,7 @@ public class Main {
 				log.info("UI source set found; launching client");
 				clientMain(method);
 			} catch ( final ReflectiveOperationException ex ) {
-				log.catching(ex);
+				log.catching(Level.DEBUG, ex);
 				log.info("UI source set not included in jar; launching server");
 				serverMain();
 			}
