@@ -7,7 +7,7 @@ import com.github.hanavan99.conwaygameoflife.model.Game;
  * 
  * @author Zach Deibert
  */
-public class NetworkClient {
+public class NetworkClient extends Thread {
 	/**
 	 * Default constructor
 	 * 

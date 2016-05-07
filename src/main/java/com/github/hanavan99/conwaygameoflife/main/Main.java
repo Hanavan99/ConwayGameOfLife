@@ -7,11 +7,20 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.hanavan99.conwaygameoflife.model.Game;
+import com.github.hanavan99.conwaygameoflife.network.NetworkServer;
+import com.github.hanavan99.conwaygameoflife.simulator.Simulator;
+
 public class Main {
 	private static final Logger log = LogManager.getLogger();
 
 	private static void serverMain() {
-
+		final Game game = new Game();
+		final Simulator simulator = new Simulator(game);
+		final NetworkServer server = new NetworkServer(game);
+		simulator.start();
+		server.start();
+		log.info("All server threads started");
 	}
 
 	private static void clientMain(Method main) throws ReflectiveOperationException {
