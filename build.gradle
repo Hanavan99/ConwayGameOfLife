@@ -42,8 +42,8 @@ eclipse {
 
 task run(type: JavaExec) {
 	main = "com.github.hanavan99.conwaygameoflife.main.Main"
-	classpath = sourceSets.main.runtimeClasspath
-	classpath sourceSets.ui.runtimeClasspath
+	classpath = sourceSets.ui.runtimeClasspath
+	classpath sourceSets.main.runtimeClasspath
 	dependsOn classes
 	dependsOn uiClasses
 }
