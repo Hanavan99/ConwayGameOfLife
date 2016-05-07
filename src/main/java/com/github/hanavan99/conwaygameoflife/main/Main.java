@@ -34,12 +34,12 @@ public class Main {
 			serverMain();
 		} else {
 			try {
-				Class<?> cls = Class.forName("com.github.hanavan99.conwaygameoflife.main.UIMain");
+				Class<?> cls = Class.forName("com.github.hanvan99.conwaygameoflife.main.UIMain");
 				Method method = cls.getMethod("main");
 				log.info("UI source set found; launching client");
 				clientMain(method);
 			} catch ( final ReflectiveOperationException ex ) {
-				log.catching(Level.DEBUG, ex);
+				log.catching(ex);
 				log.info("UI source set not included in jar; launching server");
 				serverMain();
 			}
