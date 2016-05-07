@@ -1,22 +1,29 @@
 package com.conway.main;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.conway.layout.UILookAndFeel;
-import com.conway.logging.LogManager;
-import com.conway.net.GamePacket;
 import com.conway.panels.MainPanel;
 import com.conway.panels.PanelManager;
-import com.conway.util.Vector2D;
 
 public class Main {
+	private static final Logger log = LogManager.getLogger();
 	public static JFrame gamewindow;
 
 	public static void main(String[] args) {
 		UILookAndFeel.init();
-		LogManager.useLogger(true);
-		LogManager.init();
-		LogManager.log("debug", "Logger initialized");
+		log.info("Starting game...");
+		log.trace("Tracing something");
+		log.debug("Debugging someting");
+		log.info("Doing something");
+		log.warn("Not doing so well at something");
+		log.error("Failing to do something");
+		log.fatal("Causing all sorts of problems");
 		gamewindow = new JFrame("Conway's Game Of Life");
 		gamewindow.setLayout(new BorderLayout());
 		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);

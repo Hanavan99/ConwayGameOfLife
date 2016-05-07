@@ -12,7 +12,7 @@ repositories {
 dependencies {
 	compile files("lib/GUILogger.jar")
 	compile "org.apache.logging.log4j:log4j-api:2.5"
-	runtime "org.apache.logging.log4j:log4j-core:2.5"
+	compile "org.apache.logging.log4j:log4j-core:2.5"
 	deployCompile "com.sparkjava:spark-core:2.2"
 }
 
