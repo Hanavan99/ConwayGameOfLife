@@ -1,5 +1,10 @@
 package com.github.hanavan99.conwaygameoflife.network;
 
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.github.hanavan99.conwaygameoflife.model.ConnectionState;
 import com.github.hanavan99.conwaygameoflife.model.Game;
 import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
@@ -10,6 +15,7 @@ import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
  * @author Zach Deibert
  */
 public class Networking extends Thread {
+	private static final Logger log = LogManager.getLogger();
 	private final Game game;
 
 	/**
@@ -30,10 +36,14 @@ public class Networking extends Thread {
 				Thread.yield();
 			}
 			// Start the correct submodule for what we are required to be
-			if ( server.isServer() ) {
-				new NetworkServer(this);
-			} else {
-				new NetworkClient(this);
+			try {
+				if ( server.isServer() ) {
+					new NetworkServer(this);
+				} else {
+					new NetworkClient(this);
+				}
+			} catch ( final IOException ex ) {
+				log.catching(ex);
 			}
 			// After the constructors return, the connection is closed
 			server.setState(ConnectionState.Disconnected);
@@ -47,6 +57,7 @@ public class Networking extends Thread {
 	 *            The game to network for
 	 */
 	public Networking(Game game) {
+		super("Networking");
 		this.game = game;
 	}
 }
