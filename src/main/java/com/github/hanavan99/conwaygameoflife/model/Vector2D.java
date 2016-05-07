@@ -1,4 +1,4 @@
-package com.conway.util;
+package com.github.hanavan99.conwaygameoflife.model;
 
 import java.io.Serializable;
 

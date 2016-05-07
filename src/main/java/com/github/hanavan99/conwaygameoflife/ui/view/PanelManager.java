@@ -1,4 +1,4 @@
-package com.conway.panels;
+package com.github.hanavan99.conwaygameoflife.ui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Container;

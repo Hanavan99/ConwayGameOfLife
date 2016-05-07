@@ -1,10 +1,10 @@
-package com.conway.panels;
+package com.github.hanavan99.conwaygameoflife.ui.view;
 
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import javax.swing.JPanel;
 
-import com.conway.layout.UIManager;
+import com.github.hanavan99.conwaygameoflife.ui.view.layout.UIManager;
 
 public abstract class AbstractPanel extends JPanel {
 

@@ -1,4 +1,4 @@
-package com.conway.layout;
+package com.github.hanavan99.conwaygameoflife.ui.view.layout;
 
 import java.awt.Component;
 import java.awt.Container;

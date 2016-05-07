@@ -1,10 +1,10 @@
-package com.conway.main;
+package com.github.hanavan99.conwaygameoflife.main;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
 
-import com.conway.panels.MainPanel;
-import com.conway.panels.PanelManager;
+import com.github.hanavan99.conwaygameoflife.ui.view.MainPanel;
+import com.github.hanavan99.conwaygameoflife.ui.view.PanelManager;
 
 public final class AppletMain extends Applet {
 	private static final long serialVersionUID = 8187756037896569937L;

@@ -1,4 +1,4 @@
-package com.conway.deploy;
+package com.github.hanavan99.conwaygameoflife.deploy;
 
 import spark.Spark;
 

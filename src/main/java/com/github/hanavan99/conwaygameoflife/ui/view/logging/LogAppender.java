@@ -1,4 +1,4 @@
-package com.conway.logging;
+package com.github.hanavan99.conwaygameoflife.ui.view.logging;
 
 import java.awt.Color;
 import java.io.Serializable;

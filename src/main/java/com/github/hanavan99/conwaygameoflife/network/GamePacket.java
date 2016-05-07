@@ -1,4 +1,4 @@
-package com.conway.net;
+package com.github.hanavan99.conwaygameoflife.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import com.conway.util.Vector2D;
+import com.github.hanavan99.conwaygameoflife.model.Vector2D;
 
 /**
  * Packet that is sent to update all clients on a server.

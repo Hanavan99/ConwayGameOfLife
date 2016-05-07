@@ -1,4 +1,4 @@
-package com.conway.panels;
+package com.github.hanavan99.conwaygameoflife.ui.view;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;

@@ -1,4 +1,4 @@
-package com.conway.main;
+package com.github.hanavan99.conwaygameoflife.main;
 
 import java.awt.BorderLayout;
 
@@ -7,9 +7,9 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.conway.layout.UILookAndFeel;
-import com.conway.panels.MainPanel;
-import com.conway.panels.PanelManager;
+import com.github.hanavan99.conwaygameoflife.ui.view.MainPanel;
+import com.github.hanavan99.conwaygameoflife.ui.view.PanelManager;
+import com.github.hanavan99.conwaygameoflife.ui.view.layout.UILookAndFeel;
 
 public class Main {
 	private static final Logger log = LogManager.getLogger();
