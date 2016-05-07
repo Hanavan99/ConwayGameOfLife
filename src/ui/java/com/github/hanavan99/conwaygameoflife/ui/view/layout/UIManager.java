@@ -38,6 +38,8 @@ public class UIManager {
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 80, 200, 30)));
 		layout_default.put("main_button4", new UIConfig(null, null,
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 120, 200, 30)));
+		layout_default.put("main_gif", new UIConfig(null, null,
+				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 160, 200, 200)));
 		layout_default.put("navigation_panel", new UIConfig(null, null, () -> new Rectangle(getRelLayoutWidth(0.8d),
 				getRelLayoutWidth(0.9d), getRelLayoutWidth(0.2d), getRelLayoutHeight(0.1d))));
 		UIs.put("default", layout_default);

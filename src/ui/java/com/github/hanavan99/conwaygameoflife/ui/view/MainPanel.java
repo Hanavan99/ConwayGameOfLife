@@ -1,7 +1,11 @@
 package com.github.hanavan99.conwaygameoflife.ui.view;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -21,6 +25,12 @@ public class MainPanel extends AbstractPanel {
 	public MainPanel() {
 		setBounds(0, 0, getUIManager().getScreenWidth(), getUIManager().getScreenHeight());
 		getUIManager().resetUI();
+		//
+//		URL url = this.getClass().getResource("assets/conwayGif.gif");
+		Icon myImgIcon = new ImageIcon("assets/conwayGif.gif");
+		JLabel imageLbl = new JLabel(myImgIcon);
+		add(imageLbl, "main_gif");
+		//
 		JLabel title = new JLabel("Conway's Game Of Life");
 		title.setHorizontalAlignment(JLabel.CENTER);
 		add(title, "main_title");
