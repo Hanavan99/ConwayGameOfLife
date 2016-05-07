@@ -33,6 +33,9 @@ public class UIManager {
 		layout_default.put("main_button2", new UIConfig(null, null, () -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 40, 200, 30)));
 		layout_default.put("main_button3", new UIConfig(null, null, () -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 80, 200, 30)));
 		layout_default.put("main_button4", new UIConfig(null, null, () -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 120, 200, 30)));
+		layout_default.put("join_multiplayer_panel", new UIConfig(null, null, () -> new Rectangle(0, 0, getLayoutWidth(), getLayoutHeight())));
+		layout_default.put("singleplayer_panel", new UIConfig(null, null, () -> new Rectangle(0, 0, getLayoutWidth(), getLayoutHeight())));
+		layout_default.put("multiplayer_panel", new UIConfig(null, null, () -> new Rectangle(0, 0, getLayoutWidth(), getLayoutHeight())));
 		UIs.put("default", layout_default);
 		if ( comp instanceof JComponent ) {
 		    ((JComponent) comp).setLayout(new UILayout(this));

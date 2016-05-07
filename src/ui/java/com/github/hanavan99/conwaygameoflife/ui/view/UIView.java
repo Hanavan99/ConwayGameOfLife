@@ -8,6 +8,7 @@ import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
 import com.github.hanavan99.conwaygameoflife.ui.view.layout.UILookAndFeel;
 
 public class UIView implements Runnable {
+	
 	@Override
 	public void run() {
 		UILookAndFeel.init();
