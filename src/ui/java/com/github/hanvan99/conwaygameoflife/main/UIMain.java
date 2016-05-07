@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.hanavan99.conwaygameoflife.model.Game;
-import com.github.hanavan99.conwaygameoflife.network.NetworkClient;
+import com.github.hanavan99.conwaygameoflife.network.Networking;
 import com.github.hanavan99.conwaygameoflife.simulator.Simulator;
 import com.github.hanavan99.conwaygameoflife.ui.controller.UIController;
 import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
@@ -18,7 +18,7 @@ public class UIMain {
 	public static void main() {
 		final Game game = new Game();
 		final Simulator simulator = new Simulator(game);
-		final NetworkClient client = new NetworkClient(game);
+		final Networking client = new Networking(game);
 		simulator.start();
 		client.start();
 		final UIModel model = new UIModel(game);
