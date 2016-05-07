@@ -48,6 +48,12 @@ task run(type: JavaExec) {
 	dependsOn uiClasses
 }
 
+task runServer(type: JavaExec) {
+	main = "com.github.hanavan99.conwaygameoflife.main.Main"
+	classpath = sourceSets.main.runtimeClasspath
+	dependsOn classes
+}
+
 task deployJar(type: Jar) {
 	from files(sourceSets.deploy.output.classesDir)
 	from files(sourceSets.deploy.output.resourcesDir)
