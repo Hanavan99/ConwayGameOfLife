@@ -8,6 +8,7 @@ public class GamePanel extends AbstractPanel{
 
 	public GamePanel(boolean multiplayer) {
 		setBackground(new Color(125, 125, 125));
+		add(new NavigationPanel(), "navigation_panel");
 		if(multiplayer)
 		{
 			

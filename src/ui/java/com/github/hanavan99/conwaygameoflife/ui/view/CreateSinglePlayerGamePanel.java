@@ -7,6 +7,7 @@ public class CreateSinglePlayerGamePanel extends AbstractPanel{
 	public CreateSinglePlayerGamePanel() {
 		PanelManager.addPanel("gamePanel", new GamePanel(false));
 		PanelManager.showPanel("gamePanel");
+		add(new NavigationPanel(), "navigation_panel");
 	}
 
 }

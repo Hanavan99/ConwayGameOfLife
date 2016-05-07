@@ -16,6 +16,7 @@ public class JoinMultiplayerGamePanel extends AbstractPanel {
 	public JoinMultiplayerGamePanel() {
 		this.setBackground(new Color(125, 125, 125));
 		textField.setColumns(10);
+		add(new NavigationPanel(), "navigation_panel");
 		add(textField);
 		add(joinButton);
 		joinButton.addActionListener((ActionEvent e) -> {
