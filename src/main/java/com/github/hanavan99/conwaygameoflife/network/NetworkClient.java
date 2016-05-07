@@ -1,20 +1,17 @@
 package com.github.hanavan99.conwaygameoflife.network;
 
-import com.github.hanavan99.conwaygameoflife.model.Game;
-
 /**
- * A client for the networking protocol used by the game.
+ * The client with a TCP client
  * 
  * @author Zach Deibert
  */
-public class NetworkClient extends Thread {
+class NetworkClient {
 	/**
 	 * Default constructor
 	 * 
-	 * @param game
-	 *            The game to network for
+	 * @param net
+	 *            The networking manager
 	 */
-	public NetworkClient(Game game) {
-
+	NetworkClient(Networking net) {
 	}
 }
