@@ -1,36 +1,39 @@
 package com.github.hanavan99.conwaygameoflife.main;
 
-import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
+import java.lang.reflect.Method;
 
-import javax.swing.JFrame;
-
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.github.hanavan99.conwaygameoflife.ui.view.MainPanel;
-import com.github.hanavan99.conwaygameoflife.ui.view.PanelManager;
-import com.github.hanavan99.conwaygameoflife.ui.view.layout.UILookAndFeel;
-
 public class Main {
 	private static final Logger log = LogManager.getLogger();
-	public static JFrame gamewindow;
+
+	private static void serverMain() {
+
+	}
+
+	private static void clientMain(Method main) throws ReflectiveOperationException {
+		main.invoke(null);
+	}
 
 	public static void main(String[] args) {
-		UILookAndFeel.init();
 		log.info("Starting game...");
-		log.trace("Tracing something");
-		log.debug("Debugging someting");
-		log.info("Doing something");
-		log.warn("Not doing so well at something");
-		log.error("Failing to do something");
-		log.fatal("Causing all sorts of problems");
-		gamewindow = new JFrame("Conway's Game Of Life");
-		gamewindow.setLayout(new BorderLayout());
-		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		gamewindow.setUndecorated(true);
-		gamewindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gamewindow.setVisible(true);
-		PanelManager.setParentFrame(gamewindow);
-		PanelManager.addPanel("main", new MainPanel());
+		if ( GraphicsEnvironment.isHeadless() ) {
+			log.info("Forcing server mode because the program is running in a headless environment");
+			serverMain();
+		} else {
+			try {
+				Class<?> cls = Class.forName("com.github.hanavan99.conwaygameoflife.main.UIMain");
+				Method method = cls.getMethod("main");
+				log.info("UI source set found; launching client");
+				clientMain(method);
+			} catch ( final ReflectiveOperationException ex ) {
+				log.catching(Level.DEBUG, ex);
+				log.info("UI source set not included in jar; launching server");
+				serverMain();
+			}
+		}
 	}
 }
