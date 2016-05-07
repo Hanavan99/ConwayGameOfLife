@@ -47,6 +47,10 @@ public class Networking extends Thread {
 			}
 			// After the constructors return, the connection is closed
 			server.setState(ConnectionState.Disconnected);
+			// Wait for the server to become ready again
+			while ( server.getState() == ConnectionState.Disconnected ) {
+				Thread.yield();
+			}
 		}
 	}
 

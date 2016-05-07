@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.zip.DeflaterInputStream;
+import java.util.zip.DeflaterOutputStream;
 
 import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
 
@@ -27,6 +29,7 @@ class NetworkClient {
 	 */
 	public void send(byte[] data) throws IOException {
 		out.write(data);
+		out.flush();
 	}
 
 	private static Socket createSocket(Networking net) throws IOException {
@@ -46,8 +49,8 @@ class NetworkClient {
 	 */
 	NetworkClient(Networking net, Socket sock) throws IOException {
 		this.sock = sock;
-		in = sock.getInputStream();
-		out = sock.getOutputStream();
+		in = new DeflaterInputStream(sock.getInputStream());
+		out = new DeflaterOutputStream(sock.getOutputStream());
 	}
 
 	/**
