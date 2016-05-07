@@ -1,23 +1,31 @@
 package com.github.hanvan99.conwaygameoflife.main;
 
-import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
-import javax.swing.JFrame;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import com.github.hanavan99.conwaygameoflife.ui.view.MainPanel;
-import com.github.hanavan99.conwaygameoflife.ui.view.PanelManager;
-import com.github.hanavan99.conwaygameoflife.ui.view.layout.UILookAndFeel;
+import com.github.hanavan99.conwaygameoflife.model.Game;
+import com.github.hanavan99.conwaygameoflife.network.NetworkClient;
+import com.github.hanavan99.conwaygameoflife.simulator.Simulator;
+import com.github.hanavan99.conwaygameoflife.ui.controller.UIController;
+import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
+import com.github.hanavan99.conwaygameoflife.ui.view.UIView;
 
 public class UIMain {
+	private static final Logger log = LogManager.getLogger();
+
 	public static void main() {
-		UILookAndFeel.init();
-		JFrame gamewindow = new JFrame("Conway's Game Of Life");
-		gamewindow.setLayout(new BorderLayout());
-		gamewindow.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		gamewindow.setUndecorated(true);
-		gamewindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gamewindow.setVisible(true);
-		PanelManager.setParentFrame(gamewindow);
-		PanelManager.addPanel("main", new MainPanel());
+		final Game game = new Game();
+		final Simulator simulator = new Simulator(game);
+		final NetworkClient client = new NetworkClient(game);
+		simulator.start();
+		client.start();
+		final UIModel model = new UIModel(game);
+		final UIView view = new UIView(model);
+		final UIController ctrlr = new UIController(model);
+		EventQueue.invokeLater(view);
+		EventQueue.invokeLater(ctrlr);
+		log.info("All client threads started");
 	}
 }
