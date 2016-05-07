@@ -3,6 +3,8 @@ apply plugin: "eclipse"
 
 sourceSets {
 	deploy
+	applet
+	ui
 }
 
 repositories {
@@ -10,15 +12,19 @@ repositories {
 }
 
 dependencies {
-	compile files("lib/GUILogger.jar")
 	compile "org.apache.logging.log4j:log4j-api:2.5"
 	compile "org.apache.logging.log4j:log4j-core:2.5"
+	uiCompile files("lib/GUILogger.jar")
 	deployCompile "com.sparkjava:spark-core:2.2"
+	appletCompile sourceSets.ui.output
+	appletCompile sourceSets.main.output
+	uiCompile sourceSets.main.output
 }
 
 configurations {
 	eclipseCP {
 		dependencies {
+			compile files("lib/GUILogger.jar")
 			compile "com.sparkjava:spark-core:2.2"
 		}
 	}
@@ -87,6 +93,10 @@ jar {
 			"Codebase": "hanavan99.github.io",
 			"Application-Name": "Conway's Game of Life"
 	}
+	from files(sourceSets.ui.output.classesDir)
+	from files(sourceSets.ui.output.resourcesDir)
+	from files(sourceSets.applet.output.classesDir)
+	from files(sourceSets.applet.output.resourcesDir)
 }
 
 build {
