@@ -1,6 +1,9 @@
 package com.github.hanavan99.conwaygameoflife.network;
 
+import java.io.IOException;
+
 import com.github.hanavan99.conwaygameoflife.model.Game;
+import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
 
 /**
@@ -12,7 +15,10 @@ class ServerDataHandler implements IDataHandler {
 	private final Game game;
 	
 	@Override
-	public void handle(IPacket packet, NetworkClient client) {
+	public void handle(IPacket packet, NetworkClient client) throws IOException {
+		if ( packet instanceof HelloPacket ) {
+			client.send(new HelloPacket());
+		}
 	}
 
 	/**

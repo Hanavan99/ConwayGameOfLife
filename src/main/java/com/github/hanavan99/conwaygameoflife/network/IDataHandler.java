@@ -1,5 +1,7 @@
 package com.github.hanavan99.conwaygameoflife.network;
 
+import java.io.IOException;
+
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
 
 /**
@@ -17,6 +19,8 @@ interface IDataHandler {
 	 *            The packet
 	 * @param client
 	 *            The client that received the packet
+	 * @throws IOException
+	 *             if an i/o error occurs
 	 */
-	public void handle(IPacket packet, NetworkClient client);
+	public void handle(IPacket packet, NetworkClient client) throws IOException;
 }
