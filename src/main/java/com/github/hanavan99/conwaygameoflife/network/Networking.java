@@ -40,7 +40,7 @@ public class Networking extends Thread {
 				if ( server.isServer() ) {
 					new NetworkServer(this);
 				} else {
-					new NetworkClient(this, new ClientDataHandler());
+					new NetworkClient(this, new ClientDataHandler()).run();
 				}
 			} catch ( final IOException ex ) {
 				log.catching(ex);

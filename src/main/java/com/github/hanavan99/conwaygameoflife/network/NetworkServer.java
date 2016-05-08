@@ -30,9 +30,10 @@ class NetworkServer {
 		ServerDataHandler handler = new ServerDataHandler();
 		try ( ServerSocket sock = new ServerSocket(server.getPort(), 1, InetAddress.getByName(server.getIp()))) {
 			log.info("Server started on port {}", server.getPort());
+			int clientId = -1;
 			while ( true ) {
-				NetworkClient client = new NetworkClient(net, sock.accept(), handler);
-				client.send("Hello, world!".getBytes());
+				new Thread(new NetworkClient(net, sock.accept(), handler), String.format("Client-%d", ++clientId))
+						.start();
 			}
 		}
 	}
