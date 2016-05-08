@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.hanavan99.conwaygameoflife.model.Game;
 import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
 
 /**
@@ -26,8 +27,9 @@ class NetworkServer {
 	 *             if an error occurs while connecting to the server
 	 */
 	NetworkServer(Networking net) throws IOException {
-		ServerInfo server = net.getGame().getServer();
-		ServerDataHandler handler = new ServerDataHandler();
+		Game game = net.getGame();
+		ServerInfo server = game.getServer();
+		ServerDataHandler handler = new ServerDataHandler(game);
 		try ( ServerSocket sock = new ServerSocket(server.getPort(), 1, InetAddress.getByName(server.getIp()))) {
 			log.info("Server started on port {}", server.getPort());
 			int clientId = -1;

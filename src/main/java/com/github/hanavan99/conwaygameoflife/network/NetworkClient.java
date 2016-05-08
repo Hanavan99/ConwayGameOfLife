@@ -40,19 +40,32 @@ class NetworkClient implements Runnable {
 	 */
 	public void send(byte[] data) throws IOException {
 		if ( data.length >= NetworkConfig.MINIMUM_COMPRESSION_SIZE ) {
-			try ( ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-				try ( GZIPOutputStream gz = new GZIPOutputStream(out)) {
-					gz.write(data);
-				}
-				byte[] compressed = buffer.toByteArray();
-				out.writeBoolean(true);
-				out.write(compressed);
+			out.writeBoolean(true);
+			try ( GZIPOutputStream gz = new GZIPOutputStream(out)) {
+				gz.write(data);
 			}
 		} else {
 			out.writeBoolean(false);
 			out.write(data);
 		}
 		out.flush();
+	}
+
+	/**
+	 * Writes data to the server
+	 * 
+	 * @param packet
+	 *            The data
+	 * @throws IOException
+	 *             if an i/o error occurs
+	 */
+	public void send(IPacket packet) throws IOException {
+		try ( ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+			try ( DataOutputStream data = new DataOutputStream(buffer)) {
+				packet.save(data);
+			}
+			send(buffer.toByteArray());
+		}
 	}
 
 	/**

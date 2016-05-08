@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.github.hanavan99.conwaygameoflife.model.ConnectionState;
 import com.github.hanavan99.conwaygameoflife.model.Game;
 import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
+import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 
 /**
  * The networking protocol used by the game.
@@ -40,7 +41,9 @@ public class Networking extends Thread {
 				if ( server.isServer() ) {
 					new NetworkServer(this);
 				} else {
-					new NetworkClient(this, new ClientDataHandler()).run();
+					NetworkClient client = new NetworkClient(this, new ClientDataHandler(game));
+					client.send(new HelloPacket());
+					client.run();
 				}
 			} catch ( final IOException ex ) {
 				log.catching(ex);
