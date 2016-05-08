@@ -12,6 +12,9 @@ import com.github.hanavan99.conwaygameoflife.network.NetworkConfig;
  * @author Zach Deibert
  */
 public class HelloPacket implements IPacket {
+	/**
+	 * The version of protocol it is running
+	 */
 	public int version;
 
 	@Override
