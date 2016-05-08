@@ -16,7 +16,7 @@ import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
  */
 class NetworkServer {
 	private static final Logger log = LogManager.getLogger();
-	
+
 	/**
 	 * Default constructor
 	 * 
@@ -27,10 +27,11 @@ class NetworkServer {
 	 */
 	NetworkServer(Networking net) throws IOException {
 		ServerInfo server = net.getGame().getServer();
+		ServerDataHandler handler = new ServerDataHandler();
 		try ( ServerSocket sock = new ServerSocket(server.getPort(), 1, InetAddress.getByName(server.getIp()))) {
 			log.info("Server started on port {}", server.getPort());
 			while ( true ) {
-				NetworkClient client = new NetworkClient(net, sock.accept());
+				NetworkClient client = new NetworkClient(net, sock.accept(), handler);
 				client.send("Hello, world!".getBytes());
 			}
 		}

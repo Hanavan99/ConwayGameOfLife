@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.hanavan99.conwaygameoflife.model.ServerInfo;
+import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.PacketFactory;
 
 /**
  * The client with a TCP client
@@ -25,6 +28,7 @@ class NetworkClient implements Runnable {
 	private final Socket sock;
 	private final DataInputStream in;
 	private final DataOutputStream out;
+	private final IDataHandler handler;
 
 	/**
 	 * Writes data to the server
@@ -41,11 +45,11 @@ class NetworkClient implements Runnable {
 					gz.write(data);
 				}
 				byte[] compressed = buffer.toByteArray();
-				out.writeInt(-data.length);
+				out.writeBoolean(true);
 				out.write(compressed);
 			}
 		} else {
-			out.writeInt(data.length);
+			out.writeBoolean(false);
 			out.write(data);
 		}
 		out.flush();
@@ -58,15 +62,13 @@ class NetworkClient implements Runnable {
 	public void run() {
 		try {
 			while ( sock.isConnected() ) {
-				int len = in.readInt();
-				byte[] buffer = new byte[Math.abs(len)];
-				if ( len < 0 ) {
+				boolean isCompressed = in.readBoolean();
+				if ( isCompressed ) {
 					GZIPInputStream gz = new GZIPInputStream(in);
-					gz.read(buffer);
+					handleMessage(gz);
 				} else {
-					in.read(buffer);
+					handleMessage(in);
 				}
-				handleMessage(buffer);
 			}
 		} catch ( IOException ex ) {
 			log.catching(ex);
@@ -77,9 +79,18 @@ class NetworkClient implements Runnable {
 			}
 		}
 	}
-	
-	private void handleMessage(byte[] data) {
-		
+
+	private void handleMessage(InputStream in) throws IOException {
+		DataInputStream data;
+		if ( in instanceof DataInputStream ) {
+			data = (DataInputStream) in;
+		} else {
+			data = new DataInputStream(in);
+		}
+		byte id = data.readByte();
+		IPacket packet = PacketFactory.construct(id);
+		packet.load(data);
+		handler.handle(packet, this);
 	}
 
 	private static Socket createSocket(Networking net) throws IOException {
@@ -94,13 +105,16 @@ class NetworkClient implements Runnable {
 	 *            The networking manager
 	 * @param sock
 	 *            The socket to use for connection to the server
+	 * @param handler
+	 *            The class to send the received packets to to handle
 	 * @throws IOException
 	 *             if an error occurs while connecting to the server
 	 */
-	NetworkClient(Networking net, Socket sock) throws IOException {
+	NetworkClient(Networking net, Socket sock, IDataHandler handler) throws IOException {
 		this.sock = sock;
 		in = new DataInputStream(new BufferedInputStream(sock.getInputStream(), NetworkConfig.INPUT_BUFFER_SIZE));
 		out = new DataOutputStream(new BufferedOutputStream(sock.getOutputStream(), NetworkConfig.OUTPUT_BUFFER_SIZE));
+		this.handler = handler;
 	}
 
 	/**
@@ -108,10 +122,12 @@ class NetworkClient implements Runnable {
 	 * 
 	 * @param net
 	 *            The networking manager
+	 * @param handler
+	 *            The class to send the received packets to to handle
 	 * @throws IOException
 	 *             if an error occurs while connecting to the server
 	 */
-	NetworkClient(Networking net) throws IOException {
-		this(net, createSocket(net));
+	NetworkClient(Networking net, IDataHandler handler) throws IOException {
+		this(net, createSocket(net), handler);
 	}
 }
