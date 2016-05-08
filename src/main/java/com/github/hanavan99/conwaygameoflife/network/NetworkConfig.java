@@ -5,7 +5,7 @@ package com.github.hanavan99.conwaygameoflife.network;
  * 
  * @author Zach Deibert
  */
-abstract class NetworkConfig {
+public abstract class NetworkConfig {
 	/**
 	 * The minimum size of a packet before it is compressed
 	 */
@@ -22,4 +22,8 @@ abstract class NetworkConfig {
 	 * The size of the buffer to use for output operations
 	 */
 	static final int OUTPUT_BUFFER_SIZE = 4096;
+	/**
+	 * The version of protocol this implementation is for
+	 */
+	public static final int PROTOCOL_VERSION = 1;
 }
