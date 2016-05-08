@@ -41,12 +41,10 @@ class NetworkClient implements Runnable {
 					gz.write(data);
 				}
 				byte[] compressed = buffer.toByteArray();
-				out.writeBoolean(true);
-				out.writeInt(data.length);
+				out.writeInt(-data.length);
 				out.write(compressed);
 			}
 		} else {
-			out.writeBoolean(false);
 			out.writeInt(data.length);
 			out.write(data);
 		}
@@ -60,10 +58,9 @@ class NetworkClient implements Runnable {
 	public void run() {
 		try {
 			while ( sock.isConnected() ) {
-				boolean isCompressed = in.readBoolean();
 				int len = in.readInt();
-				byte[] buffer = new byte[len];
-				if ( isCompressed ) {
+				byte[] buffer = new byte[Math.abs(len)];
+				if ( len < 0 ) {
 					GZIPInputStream gz = new GZIPInputStream(in);
 					gz.read(buffer);
 				} else {
