@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.github.hanavan99.conwaygameoflife.model.Game;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.LoginPacket;
 
 /**
  * Handles data for a client from the server
@@ -15,6 +16,9 @@ class ClientDataHandler implements IDataHandler {
 
 	@Override
 	public void handle(IPacket packet, NetworkClient client) throws IOException {
+		if ( packet instanceof LoginPacket ) {
+			game.getPlayers().add(((LoginPacket) packet).player);
+		}
 	}
 
 	/**
