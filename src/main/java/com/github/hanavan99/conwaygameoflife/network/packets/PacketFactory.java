@@ -37,6 +37,7 @@ public abstract class PacketFactory {
 		register(new SwitchServerPacket(null));
 		register(new MessagePacket(null));
 		register(new SetSpeedPacket(0));
+		register(new KetchupPacket());
 	}
 
 	/**

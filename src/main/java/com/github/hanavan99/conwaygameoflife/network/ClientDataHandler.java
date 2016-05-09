@@ -23,6 +23,7 @@ import com.github.hanavan99.conwaygameoflife.network.packets.HashPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.HashType;
 import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.KetchupPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.LoginPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.MessagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerImagePacket;
@@ -72,6 +73,8 @@ class ClientDataHandler implements IDataHandler {
 			if ( ((HelloPacket) packet).version != NetworkConfig.PROTOCOL_VERSION ) {
 				throw new InvalidPacketException("Invalid server protocol version");
 			}
+		} else if ( packet instanceof KetchupPacket ) {
+			throw new InvalidPacketException("KetchupPacket should only be sent to the server");
 		} else if ( packet instanceof LoginPacket ) {
 			throw new InvalidPacketException("LoginPacket should only be sent to the server");
 		} else if ( packet instanceof MessagePacket ) {

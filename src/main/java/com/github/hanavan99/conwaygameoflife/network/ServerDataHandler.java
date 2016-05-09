@@ -19,6 +19,7 @@ import com.github.hanavan99.conwaygameoflife.network.packets.ChunkListImagePacke
 import com.github.hanavan99.conwaygameoflife.network.packets.HashPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.KetchupPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.LoginPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.MessagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerImagePacket;
@@ -134,6 +135,10 @@ class ServerDataHandler implements IDataHandler {
 			}
 			client.send(new HelloPacket());
 			client.send(new ChallengePacket(challenge, NetworkConfig.CHALLENGE_GENERATIONS));
+		} else if ( packet instanceof KetchupPacket ) {
+			log.info("Client could not keep up with the pace of the server");
+			log.info("Rechallenging all clients");
+			broadcast(new ChallengePacket(challenge, NetworkConfig.CHALLENGE_GENERATIONS));
 		} else if ( packet instanceof LoginPacket ) {
 			log.info("Client logged in with name {}", ((LoginPacket) packet).player.getName());
 			game.getPlayers().add(((LoginPacket) packet).player);
