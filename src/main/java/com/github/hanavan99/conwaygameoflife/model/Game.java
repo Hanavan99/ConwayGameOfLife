@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.github.hanavan99.conwaygameoflife.network.NetworkConfig;
+
 /**
  * The main class to store data about a game.
  * 
@@ -171,6 +173,34 @@ public class Game implements ISerializable {
 		}
 		for ( Player player : players ) {
 			hashes.put(new GenerationHashKey(player, generation), player.hashCode());
+		}
+		List<GenerationHashKey> oldHashes = new ArrayList<GenerationHashKey>();
+		List<Integer> oldChunks = new ArrayList<Integer>();
+		List<Integer> oldPlayers = new ArrayList<Integer>();
+		int oldest = generation - NetworkConfig.KEEP_GENERATIONS;
+		for ( GenerationHashKey key : hashes.keySet() ) {
+			if ( key.getGeneration() < oldest ) {
+				oldHashes.add(key);
+			}
+		}
+		for ( int key : chunkListHashes.keySet() ) {
+			if ( key < oldest ) {
+				oldChunks.add(key);
+			}
+		}
+		for ( int key : playerListHashes.keySet() ) {
+			if ( key < oldest ) {
+				oldPlayers.add(key);
+			}
+		}
+		for ( GenerationHashKey key : oldHashes ) {
+			hashes.remove(key);
+		}
+		for ( int key : oldChunks ) {
+			chunkListHashes.remove(key);
+		}
+		for ( int key : oldPlayers ) {
+			playerListHashes.remove(key);
 		}
 	}
 

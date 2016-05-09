@@ -40,4 +40,8 @@ public abstract class NetworkConfig {
 	 * approximately the challenged amount of time minus this tolerance or less.
 	 */
 	static final int SIMULATOR_PERIOD_TOLERANCE = 10;
+	/**
+	 * The number of generations to keep the hashes for
+	 */
+	public static final int KEEP_GENERATIONS = 64;
 }
