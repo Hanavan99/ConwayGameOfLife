@@ -28,6 +28,7 @@ public abstract class PacketFactory {
 		register(new HelloPacket());
 		register(new LoginPacket(null));
 		register(new ChallengePacket(null, 0));
+		register(new HashPacket(null, 0, 0));
 	}
 
 	/**
