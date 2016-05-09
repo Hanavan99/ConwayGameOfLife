@@ -34,6 +34,7 @@ class ServerDataHandler implements IDataHandler {
 	private static final Logger log = LogManager.getLogger();
 	private final Game game;
 	private final NetworkServer server;
+	private final Game challenge;
 
 	private void broadcast(IPacket packet) throws IOException {
 		try ( ThrowingConsumer<NetworkClient> action = new ThrowingConsumer<>(c -> c.send(packet))) {
@@ -117,7 +118,7 @@ class ServerDataHandler implements IDataHandler {
 				throw new InvalidPacketException("Invalid client protocol version");
 			}
 			client.send(new HelloPacket());
-			// TODO challenge
+			client.send(new ChallengePacket(challenge, NetworkConfig.CHALLENGE_GENERATIONS));
 		} else if ( packet instanceof LoginPacket ) {
 			log.info("Client logged in with name {}", ((LoginPacket) packet).player.getName());
 			game.getPlayers().add(((LoginPacket) packet).player);
@@ -147,5 +148,6 @@ class ServerDataHandler implements IDataHandler {
 	public ServerDataHandler(Game game, NetworkServer server) {
 		this.game = game;
 		this.server = server;
+		challenge = new Challenge();
 	}
 }
