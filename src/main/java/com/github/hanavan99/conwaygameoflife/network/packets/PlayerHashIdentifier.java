@@ -12,7 +12,7 @@ import com.github.hanavan99.conwaygameoflife.model.Player;
  * 
  * @author Zach Deibert
  */
-class PlayerHashIdentifier implements IHashIdentifier {
+public class PlayerHashIdentifier implements IHashIdentifier {
 	/**
 	 * The name of the player
 	 */

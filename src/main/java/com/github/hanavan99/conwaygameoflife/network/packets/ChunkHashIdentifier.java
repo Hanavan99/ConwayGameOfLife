@@ -12,7 +12,7 @@ import com.github.hanavan99.conwaygameoflife.model.ISerializable;
  * 
  * @author Zach Deibert
  */
-class ChunkHashIdentifier implements IHashIdentifier {
+public class ChunkHashIdentifier implements IHashIdentifier {
 	/**
 	 * The x-coordinate of the chunk
 	 */
