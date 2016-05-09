@@ -27,7 +27,7 @@ public abstract class PacketFactory {
 		lastPacketId = -1;
 		register(new HelloPacket());
 		register(new LoginPacket(null));
-		register(new ChallengePacket(null));
+		register(new ChallengePacket(null, 0));
 	}
 
 	/**

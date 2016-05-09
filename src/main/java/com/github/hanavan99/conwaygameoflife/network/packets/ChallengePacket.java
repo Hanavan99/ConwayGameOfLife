@@ -18,10 +18,14 @@ public class ChallengePacket implements IPacket {
 	 * The game that is being challenged
 	 */
 	public Game game;
+	/**
+	 * The generation number to stop the challenge at
+	 */
+	public int targetGeneration;
 
 	@Override
 	public ChallengePacket clone() {
-		return new ChallengePacket(game.clone());
+		return new ChallengePacket(game.clone(), targetGeneration);
 	}
 
 	@Override
@@ -30,6 +34,7 @@ public class ChallengePacket implements IPacket {
 			game = new Game();
 		}
 		game.load(data);
+		targetGeneration = data.readInt();
 	}
 
 	@Override
@@ -39,6 +44,7 @@ public class ChallengePacket implements IPacket {
 		} else {
 			game.save(data);
 		}
+		data.writeInt(targetGeneration);
 	}
 
 	@Override
@@ -46,6 +52,7 @@ public class ChallengePacket implements IPacket {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((game == null) ? 0 : game.hashCode());
+		result = prime * result + targetGeneration;
 		return result;
 	}
 
@@ -68,12 +75,15 @@ public class ChallengePacket implements IPacket {
 		} else if ( !game.equals(other.game) ) {
 			return false;
 		}
+		if ( targetGeneration != other.targetGeneration ) {
+			return false;
+		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ChallengePacket [game=" + game + "]";
+		return "ChallengePacket [game=" + game + ", targetGeneration=" + targetGeneration + "]";
 	}
 
 	/**
@@ -81,8 +91,10 @@ public class ChallengePacket implements IPacket {
 	 * 
 	 * @param game
 	 *            The game to use in the challenge
+	 * @param generation
+	 *            The generation to stop the challenge at
 	 */
-	public ChallengePacket(Game game) {
+	public ChallengePacket(Game game, int generation) {
 		this.game = game;
 	}
 }
