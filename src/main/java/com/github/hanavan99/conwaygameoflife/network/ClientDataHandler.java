@@ -122,7 +122,7 @@ class ClientDataHandler implements IDataHandler {
 						game.getChunks().get(0).getGeneration()));
 			}
 		} else if ( packet instanceof SetSpeedPacket ) {
-			// TODO set simulator speed
+			game.setGenerationPeriod(((SetSpeedPacket) packet).generationPeriod);
 		} else if ( packet instanceof SwitchServerPacket ) {
 			net.setReconnect(((SwitchServerPacket) packet).server);
 			throw new IOException("Switching servers");
