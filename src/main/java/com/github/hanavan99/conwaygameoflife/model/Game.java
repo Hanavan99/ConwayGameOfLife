@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The main class to store data about a game.
@@ -19,6 +20,7 @@ public class Game implements ISerializable {
 	private String message;
 	private final List<Chunk> changes;
 	private int generationPeriod;
+	private Consumer<Chunk> changeAccepted;
 
 	/**
 	 * Gets the information about the server.
@@ -113,10 +115,47 @@ public class Game implements ISerializable {
 		this.generationPeriod = generationPeriod;
 	}
 
+	/**
+	 * Gets the method to run when a change has been accepted. It is implied
+	 * that the change be removed from the changes list before this method is
+	 * called.
+	 * 
+	 * @return The method
+	 */
+	public Consumer<Chunk> getChangeAccepted() {
+		return changeAccepted;
+	}
+
+	/**
+	 * Adds the method to run when a change has been accepted
+	 * 
+	 * @param changeAccepted
+	 *            The method
+	 * @see Consumer#andThen(Consumer)
+	 */
+	public void addChangeAccepted(Consumer<Chunk> changeAccepted) {
+		if ( this.changeAccepted == null ) {
+			this.changeAccepted = changeAccepted;
+		} else {
+			this.changeAccepted = this.changeAccepted.andThen(changeAccepted);
+		}
+	}
+
+	/**
+	 * Sets the method to run when a change has been accepted
+	 * 
+	 * @param changeAccepted
+	 *            The method
+	 * @see Game#addChangeAccepted(Consumer)
+	 */
+	public void setChangeAccepted(Consumer<Chunk> changeAccepted) {
+		this.changeAccepted = changeAccepted;
+	}
+
 	@Override
 	public Game clone() {
 		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
-				message, new ArrayList<Chunk>(), generationPeriod);
+				message, new ArrayList<Chunk>(), generationPeriod, changeAccepted);
 		for ( Player player : players ) {
 			game.players.add(player.clone());
 		}
@@ -195,6 +234,7 @@ public class Game implements ISerializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((challenge == null) ? 0 : challenge.hashCode());
+		result = prime * result + ((changeAccepted == null) ? 0 : changeAccepted.hashCode());
 		result = prime * result + ((changes == null) ? 0 : changes.hashCode());
 		result = prime * result + ((chunks == null) ? 0 : chunks.hashCode());
 		result = prime * result + generationPeriod;
@@ -221,6 +261,13 @@ public class Game implements ISerializable {
 				return false;
 			}
 		} else if ( !challenge.equals(other.challenge) ) {
+			return false;
+		}
+		if ( changeAccepted == null ) {
+			if ( other.changeAccepted != null ) {
+				return false;
+			}
+		} else if ( !changeAccepted.equals(other.changeAccepted) ) {
 			return false;
 		}
 		if ( changes == null ) {
@@ -267,7 +314,8 @@ public class Game implements ISerializable {
 	@Override
 	public String toString() {
 		return "Game [server=" + server + ", players=" + players + ", chunks=" + chunks + ", challenge=" + challenge
-				+ ", message=" + message + ", changes=" + changes + ", generationPeriod=" + generationPeriod + "]";
+				+ ", message=" + message + ", changes=" + changes + ", generationPeriod=" + generationPeriod
+				+ ", changeAccepted=" + changeAccepted + "]";
 	}
 
 	/**
@@ -297,9 +345,11 @@ public class Game implements ISerializable {
 	 *            The list of built changes
 	 * @param generationPeriod
 	 *            The time in milliseconds between each generation
+	 * @param changeAccepted
+	 *            The method to call when a change is accepted
 	 */
 	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message,
-			List<Chunk> changes, int generationPeriod) {
+			List<Chunk> changes, int generationPeriod, Consumer<Chunk> changeAccepted) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
@@ -307,5 +357,6 @@ public class Game implements ISerializable {
 		this.message = message;
 		this.changes = changes;
 		this.generationPeriod = generationPeriod;
+		this.changeAccepted = changeAccepted;
 	}
 }
