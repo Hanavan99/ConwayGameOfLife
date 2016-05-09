@@ -1,6 +1,5 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
 
 /**
