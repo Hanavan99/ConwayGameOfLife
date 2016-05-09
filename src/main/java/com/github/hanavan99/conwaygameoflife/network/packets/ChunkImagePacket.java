@@ -15,7 +15,7 @@ public class ChunkImagePacket extends AbstractSerializableImagingPacket<Chunk> {
 
 	@Override
 	public AbstractImagingPacket<Chunk> clone() {
-		return new ChunkImagePacket(obj.clone());
+		return new ChunkImagePacket(obj.clone(), deleted);
 	}
 
 	/**
@@ -23,8 +23,11 @@ public class ChunkImagePacket extends AbstractSerializableImagingPacket<Chunk> {
 	 * 
 	 * @param chunk
 	 *            The chunk to reimage
+	 * @param deleted
+	 *            If this object should be deleted instead of reimaged
 	 */
-	public ChunkImagePacket(Chunk chunk) {
+	public ChunkImagePacket(Chunk chunk, boolean deleted) {
 		obj = chunk;
+		this.deleted = deleted;
 	}
 }

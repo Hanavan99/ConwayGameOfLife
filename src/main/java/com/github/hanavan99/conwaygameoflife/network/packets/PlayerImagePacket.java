@@ -15,7 +15,7 @@ public class PlayerImagePacket extends AbstractSerializableImagingPacket<Player>
 
 	@Override
 	public AbstractImagingPacket<Player> clone() {
-		return new PlayerImagePacket(obj);
+		return new PlayerImagePacket(obj, deleted);
 	}
 
 	/**
@@ -23,8 +23,11 @@ public class PlayerImagePacket extends AbstractSerializableImagingPacket<Player>
 	 * 
 	 * @param player
 	 *            The player to reimage
+	 * @param deleted
+	 *            If this object should be deleted instead of reimaged
 	 */
-	public PlayerImagePacket(Player player) {
+	public PlayerImagePacket(Player player, boolean deleted) {
 		obj = player;
+		this.deleted = deleted;
 	}
 }

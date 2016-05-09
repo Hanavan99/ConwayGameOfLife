@@ -29,8 +29,8 @@ public abstract class PacketFactory {
 		register(new LoginPacket(null));
 		register(new ChallengePacket(null, 0));
 		register(new HashPacket(null, 0, 0));
-		register(new ChunkImagePacket(null));
-		register(new PlayerImagePacket(null));
+		register(new ChunkImagePacket(null, false));
+		register(new PlayerImagePacket(null, false));
 		register(new ChunkListImagePacket(null));
 		register(new PlayerListImagePacket(null));
 		register(new CellBuildPacket(null));
