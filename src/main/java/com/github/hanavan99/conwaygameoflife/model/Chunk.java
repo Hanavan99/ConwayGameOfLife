@@ -1,5 +1,8 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -7,10 +10,10 @@ import java.util.Arrays;
  * 
  * @author Zach Deibert
  */
-public class Chunk implements Cloneable {
-	private final Player player;
-	private final int x;
-	private final int y;
+public class Chunk implements ISerializable {
+	private Player player;
+	private int x;
+	private int y;
 	private long[] data;
 	private int generation;
 
@@ -124,6 +127,41 @@ public class Chunk implements Cloneable {
 	}
 
 	@Override
+	public Chunk clone() {
+		return new Chunk(player.clone(), x, y, data.clone(), generation);
+	}
+
+	@Override
+	public void load(DataInputStream data) throws IOException {
+		if ( player == null ) {
+			player = new Player();
+		}
+		player.load(data);
+		x = data.readInt();
+		y = data.readInt();
+		this.data = new long[64];
+		for ( int i = 0; i < 64; ++i ) {
+			this.data[i] = data.readLong();
+		}
+		generation = data.readInt();
+	}
+
+	@Override
+	public void save(DataOutputStream data) throws IOException {
+		if ( player == null ) {
+			new Player().save(data);
+		} else {
+			player.save(data);
+		}
+		data.writeInt(x);
+		data.writeInt(y);
+		for ( int i = 0; i < 64; ++i ) {
+			data.writeLong(this.data[i]);
+		}
+		data.writeInt(generation);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -174,6 +212,13 @@ public class Chunk implements Cloneable {
 		return "Chunk [player=" + player + ", x=" + x + ", y=" + y + ", data=" + Arrays.toString(data) + ", generation="
 				+ generation + "]";
 	}
+	
+	/**
+	 * Nullary constructor
+	 */
+	public Chunk() {
+		player = new Player();
+	}
 
 	/**
 	 * Default constructor
@@ -190,5 +235,27 @@ public class Chunk implements Cloneable {
 		this.x = x;
 		this.y = y;
 		data = new long[64];
+	}
+
+	/**
+	 * Copy constructor
+	 * 
+	 * @param player
+	 *            The player this chunk has data for
+	 * @param x
+	 *            The x-coordinate of this chunk
+	 * @param y
+	 *            The y-coordinate of this chunk
+	 * @param data
+	 *            The raw data
+	 * @param generation
+	 *            The generation number
+	 */
+	public Chunk(Player player, int x, int y, long[] data, int generation) {
+		this.player = player;
+		this.x = x;
+		this.y = y;
+		this.data = data;
+		this.generation = generation;
 	}
 }

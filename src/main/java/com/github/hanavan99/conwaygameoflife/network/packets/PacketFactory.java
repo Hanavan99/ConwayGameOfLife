@@ -26,6 +26,8 @@ public abstract class PacketFactory {
 		packets = new HashMap<Byte, IPacket>();
 		lastPacketId = -1;
 		register(new HelloPacket());
+		register(new LoginPacket(null));
+		register(new ChallengePacket(null));
 	}
 
 	/**

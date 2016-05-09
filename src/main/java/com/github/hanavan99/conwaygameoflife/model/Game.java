@@ -1,5 +1,8 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +11,7 @@ import java.util.List;
  * 
  * @author Zach Deibert
  */
-public class Game implements Cloneable {
+public class Game implements ISerializable {
 	private final ServerInfo server;
 	private final List<Player> players;
 	private final List<Chunk> chunks;
@@ -38,6 +41,50 @@ public class Game implements Cloneable {
 	 */
 	public List<Chunk> getChunks() {
 		return chunks;
+	}
+
+	@Override
+	public Game clone() {
+		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>());
+		for ( Player player : players ) {
+			game.players.add(player.clone());
+		}
+		for ( Chunk chunk : chunks ) {
+			game.chunks.add(chunk.clone());
+		}
+		return game;
+	}
+
+	@Override
+	public void load(DataInputStream data) throws IOException {
+		server.load(data);
+		players.clear();
+		int len = data.readInt();
+		for ( int i = 0; i < len; ++i ) {
+			Player player = new Player();
+			player.load(data);
+			players.add(player);
+		}
+		chunks.clear();
+		len = data.readInt();
+		for ( int i = 0; i < len; ++i ) {
+			Chunk chunk = new Chunk();
+			chunk.load(data);
+			chunks.add(chunk);
+		}
+	}
+
+	@Override
+	public void save(DataOutputStream data) throws IOException {
+		server.save(data);
+		data.writeInt(players.size());
+		for ( Player player : players ) {
+			player.save(data);
+		}
+		data.writeInt(chunks.size());
+		for ( Chunk chunk : chunks ) {
+			chunk.save(data);
+		}
 	}
 
 	@Override
@@ -98,5 +145,22 @@ public class Game implements Cloneable {
 		server = new ServerInfo();
 		players = new ArrayList<Player>();
 		chunks = new ArrayList<Chunk>();
+	}
+
+	/**
+	 * Copy constructor
+	 * 
+	 * @param server
+	 *            The server information
+	 * @param players
+	 *            The list of players
+	 * @param chunks
+	 *            The list of chunks
+	 */
+	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks) {
+		super();
+		this.server = server;
+		this.players = players;
+		this.chunks = chunks;
 	}
 }

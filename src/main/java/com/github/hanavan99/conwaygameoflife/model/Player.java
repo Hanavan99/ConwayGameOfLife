@@ -1,13 +1,16 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
 import java.awt.Color;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Information about a player who is connected to the server
  * 
  * @author Zach Deibert
  */
-public class Player implements Cloneable {
+public class Player implements ISerializable {
 	private String name;
 	private Color color;
 	private double cells;
@@ -90,6 +93,27 @@ public class Player implements Cloneable {
 	}
 
 	@Override
+	public Player clone() {
+		return new Player(name, color, cells, score);
+	}
+
+	@Override
+	public void load(DataInputStream data) throws IOException {
+		name = data.readUTF();
+		color = new Color(data.readInt());
+		cells = data.readDouble();
+		score = data.readDouble();
+	}
+
+	@Override
+	public void save(DataOutputStream data) throws IOException {
+		data.writeUTF(name);
+		data.writeInt(color.getRGB());
+		data.writeDouble(cells);
+		data.writeDouble(score);
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -141,5 +165,31 @@ public class Player implements Cloneable {
 	@Override
 	public String toString() {
 		return "Player [name=" + name + ", color=" + color + ", cells=" + cells + ", score=" + score + "]";
+	}
+
+	/**
+	 * Default constructor
+	 */
+	public Player() {
+	}
+
+	/**
+	 * Copy constructor
+	 * 
+	 * @param name
+	 *            The player's name
+	 * @param color
+	 *            The player's color
+	 * @param cells
+	 *            The amount of cells the player has to build with
+	 * @param score
+	 *            The total score of the player
+	 */
+	public Player(String name, Color color, double cells, double score) {
+		super();
+		this.name = name;
+		this.color = color;
+		this.cells = cells;
+		this.score = score;
 	}
 }

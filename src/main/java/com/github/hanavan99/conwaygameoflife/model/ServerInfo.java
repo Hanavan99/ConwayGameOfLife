@@ -1,11 +1,15 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * Information about a server which is connected to it.
  * 
  * @author Zach Deibert
  */
-public class ServerInfo implements Cloneable {
+public class ServerInfo implements ISerializable {
 	private boolean isServer;
 	private String ip;
 	private int port;
@@ -97,6 +101,27 @@ public class ServerInfo implements Cloneable {
 	}
 
 	@Override
+	public ServerInfo clone() {
+		return new ServerInfo(isServer, ip, port, state);
+	}
+
+	@Override
+	public void load(DataInputStream data) throws IOException {
+		isServer = data.readBoolean();
+		ip = data.readUTF();
+		port = data.readInt();
+		state = ConnectionState.values()[data.readInt()];
+	}
+
+	@Override
+	public void save(DataOutputStream data) throws IOException {
+		data.writeBoolean(isServer);
+		data.writeUTF(ip);
+		data.writeInt(port);
+		data.writeInt(state.ordinal());
+	}
+
+	@Override
 	public String toString() {
 		return "ServerInfo [isServer=" + isServer + ", ip=" + ip + ", port=" + port + ", state=" + state + "]";
 	}
@@ -151,5 +176,25 @@ public class ServerInfo implements Cloneable {
 		ip = "0.0.0.0";
 		port = 4242;
 		state = ConnectionState.Ready;
+	}
+
+	/**
+	 * Copy constructor
+	 * 
+	 * @param isServer
+	 *            Whether or not this node is the server
+	 * @param ip
+	 *            The IP of the server
+	 * @param port
+	 *            The port of the server
+	 * @param state
+	 *            The state of the server connection
+	 */
+	public ServerInfo(boolean isServer, String ip, int port, ConnectionState state) {
+		super();
+		this.isServer = isServer;
+		this.ip = ip;
+		this.port = port;
+		this.state = state;
 	}
 }
