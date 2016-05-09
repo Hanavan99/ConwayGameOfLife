@@ -27,12 +27,29 @@ public class HashPacket implements IPacket {
 	 * The generation number the hash was taken at
 	 */
 	public int generation;
+	/**
+	 * The identifier for the hash
+	 */
+	public IHashIdentifier identifier;
 
 	@Override
 	public void load(DataInputStream data) throws IOException {
 		type = HashType.values()[data.readInt()];
 		hash = data.readInt();
 		generation = data.readInt();
+		switch ( type ) {
+		case Chunk:
+			identifier = new ChunkHashIdentifier(0, 0, null);
+			break;
+		case Player:
+			identifier = new PlayerHashIdentifier("");
+			break;
+		default:
+			identifier = null;
+		}
+		if ( identifier != null ) {
+			identifier.load(data);
+		}
 	}
 
 	@Override
@@ -40,11 +57,18 @@ public class HashPacket implements IPacket {
 		data.writeInt(type.ordinal());
 		data.writeInt(hash);
 		data.writeInt(generation);
+		switch ( type ) {
+		case Chunk:
+		case Player:
+			identifier.save(data);
+			break;
+		default:
+		}
 	}
 
 	@Override
 	public IPacket clone() {
-		return null;
+		return new HashPacket(type, hash, generation, identifier);
 	}
 
 	@Override
@@ -53,6 +77,7 @@ public class HashPacket implements IPacket {
 		int result = 1;
 		result = prime * result + generation;
 		result = prime * result + hash;
+		result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -75,6 +100,13 @@ public class HashPacket implements IPacket {
 		if ( hash != other.hash ) {
 			return false;
 		}
+		if ( identifier == null ) {
+			if ( other.identifier != null ) {
+				return false;
+			}
+		} else if ( !identifier.equals(other.identifier) ) {
+			return false;
+		}
 		if ( type != other.type ) {
 			return false;
 		}
@@ -83,7 +115,8 @@ public class HashPacket implements IPacket {
 
 	@Override
 	public String toString() {
-		return "HashPacket [type=" + type + ", hash=" + hash + ", generation=" + generation + "]";
+		return "HashPacket [type=" + type + ", hash=" + hash + ", generation=" + generation + ", identifier="
+				+ identifier + "]";
 	}
 
 	/**
@@ -95,11 +128,14 @@ public class HashPacket implements IPacket {
 	 *            The hash value
 	 * @param generation
 	 *            The generation the hash was taken in
+	 * @param identifier
+	 *            The identifier for the hash
 	 */
-	public HashPacket(HashType type, int hash, int generation) {
+	public HashPacket(HashType type, int hash, int generation, IHashIdentifier identifier) {
 		this.type = type;
 		this.hash = hash;
 		this.generation = generation;
+		this.identifier = identifier;
 	}
 
 	/**
@@ -109,7 +145,7 @@ public class HashPacket implements IPacket {
 	 *            The chunk to hash
 	 */
 	public HashPacket(Chunk chunk) {
-		this(chunk, HashType.Chunk, chunk.getGeneration());
+		this(chunk, HashType.Chunk, chunk.getGeneration(), new ChunkHashIdentifier(chunk));
 	}
 
 	/**
@@ -121,7 +157,7 @@ public class HashPacket implements IPacket {
 	 *            The generation the hash was taken in
 	 */
 	public HashPacket(Player player, int generation) {
-		this(player, HashType.Player, generation);
+		this(player, HashType.Player, generation, new PlayerHashIdentifier(player));
 	}
 
 	/**
@@ -135,7 +171,7 @@ public class HashPacket implements IPacket {
 	 *            The generation the hash was taken in
 	 */
 	public HashPacket(List<?> list, HashType type, int generation) {
-		this(type, list.size(), generation);
+		this(type, list.size(), generation, null);
 	}
 
 	/**
@@ -147,8 +183,10 @@ public class HashPacket implements IPacket {
 	 *            The type of hash to perform
 	 * @param generation
 	 *            The generation the hash was taken in
+	 * @param identifier
+	 *            The identifier for the hash
 	 */
-	public HashPacket(Object o, HashType type, int generation) {
-		this(type, o.hashCode(), generation);
+	public HashPacket(Object o, HashType type, int generation, IHashIdentifier identifier) {
+		this(type, o.hashCode(), generation, identifier);
 	}
 }

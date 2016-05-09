@@ -117,7 +117,8 @@ class ClientDataHandler implements IDataHandler {
 			game.getPlayers().clear();
 			game.getPlayers().addAll(((PlayerListImagePacket) packet).obj);
 			if ( game.getChunks().size() > 0 ) {
-				client.send(new HashPacket(HashType.ChunkLength, 0, game.getChunks().get(0).getGeneration()));
+				client.send(new HashPacket(new ArrayList<Chunk>(), HashType.ChunkLength,
+						game.getChunks().get(0).getGeneration()));
 			}
 		} else if ( packet instanceof SwitchServerPacket ) {
 			net.setReconnect(((SwitchServerPacket) packet).server);
