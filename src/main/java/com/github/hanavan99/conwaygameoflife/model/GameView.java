@@ -1,6 +1,8 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Allows code to access the field as a whole, not just in chunk parts.
@@ -140,6 +142,31 @@ public class GameView {
 			}
 		}
 		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+	}
+
+	/**
+	 * Gets the neighbors to a cell
+	 * 
+	 * @param x
+	 *            The x-coordinate of the cell
+	 * @param y
+	 *            The y-coordinate of the cell
+	 * @return An array of the neighbors of the cell
+	 */
+	public Player[] getNeighbors(int x, int y) {
+		List<Player> neighbors = new ArrayList<Player>(8);
+		for ( int i = x - 1; i <= x + 1; ++i ) {
+			for ( int j = y - 1; j <= y + 1; ++j ) {
+				if ( i == x && j == y ) {
+					break;
+				}
+				Player neighbor = getTilePlayer(i, j);
+				if ( neighbor != null ) {
+					neighbors.add(neighbor);
+				}
+			}
+		}
+		return neighbors.toArray(new Player[0]);
 	}
 
 	/**
