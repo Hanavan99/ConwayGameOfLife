@@ -35,6 +35,7 @@ class ServerDataHandler implements IDataHandler {
 	private final Game game;
 	private final NetworkServer server;
 	private final Game challenge;
+	private IOException ex;
 
 	private void broadcast(IPacket packet) throws IOException {
 		try ( ThrowingConsumer<NetworkClient> action = new ThrowingConsumer<>(c -> c.send(packet))) {
@@ -44,9 +45,12 @@ class ServerDataHandler implements IDataHandler {
 
 	@Override
 	public void handle(IPacket packet, NetworkClient client) throws IOException {
+		if ( ex != null ) {
+			ex = null;
+			throw ex;
+		}
 		if ( packet instanceof CellBuildPacket ) {
 			game.getChanges().addAll(((CellBuildPacket) packet).chunks);
-			// TODO broadcast changes to clients after the changes are accepted
 		} else if ( packet instanceof ChallengeResponsePacket ) {
 			int generationPeriod = game.getGenerationPeriod();
 			int clientPeriod = (int) ((ChallengeResponsePacket) packet).time / (NetworkConfig.CHALLENGE_GENERATIONS
@@ -149,5 +153,12 @@ class ServerDataHandler implements IDataHandler {
 		this.game = game;
 		this.server = server;
 		challenge = new Challenge();
+		game.addChangeAccepted(chunks -> {
+			try {
+				broadcast(new CellBuildPacket(chunks));
+			} catch ( IOException e ) {
+				ex = e;
+			}
+		});
 	}
 }
