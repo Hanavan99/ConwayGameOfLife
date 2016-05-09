@@ -16,6 +16,7 @@ public class Game implements ISerializable {
 	private final List<Player> players;
 	private final List<Chunk> chunks;
 	private Game challenge;
+	private String message;
 
 	/**
 	 * Gets the information about the server.
@@ -63,9 +64,29 @@ public class Game implements ISerializable {
 		this.challenge = challenge;
 	}
 
+	/**
+	 * Gets the message to tell the user
+	 * 
+	 * @return The message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * Sets the message to tell the user
+	 * 
+	 * @param message
+	 *            The message
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	@Override
 	public Game clone() {
-		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone());
+		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
+				message);
 		for ( Player player : players ) {
 			game.players.add(player.clone());
 		}
@@ -100,6 +121,7 @@ public class Game implements ISerializable {
 		} else {
 			challenge = null;
 		}
+		message = data.readUTF();
 	}
 
 	@Override
@@ -119,6 +141,7 @@ public class Game implements ISerializable {
 			data.writeBoolean(true);
 			challenge.save(data);
 		}
+		data.writeUTF(message);
 	}
 
 	@Override
@@ -127,6 +150,7 @@ public class Game implements ISerializable {
 		int result = 1;
 		result = prime * result + ((challenge == null) ? 0 : challenge.hashCode());
 		result = prime * result + ((chunks == null) ? 0 : chunks.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((server == null) ? 0 : server.hashCode());
 		return result;
@@ -158,6 +182,13 @@ public class Game implements ISerializable {
 		} else if ( !chunks.equals(other.chunks) ) {
 			return false;
 		}
+		if ( message == null ) {
+			if ( other.message != null ) {
+				return false;
+			}
+		} else if ( !message.equals(other.message) ) {
+			return false;
+		}
 		if ( players == null ) {
 			if ( other.players != null ) {
 				return false;
@@ -178,7 +209,7 @@ public class Game implements ISerializable {
 	@Override
 	public String toString() {
 		return "Game [server=" + server + ", players=" + players + ", chunks=" + chunks + ", challenge=" + challenge
-				+ "]";
+				+ ", message=" + message + "]";
 	}
 
 	/**
@@ -201,11 +232,14 @@ public class Game implements ISerializable {
 	 *            The list of chunks
 	 * @param challenge
 	 *            The challenge to run
+	 * @param message
+	 *            The message to tell the user
 	 */
-	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge) {
+	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
 		this.challenge = challenge;
+		this.message = message;
 	}
 }
