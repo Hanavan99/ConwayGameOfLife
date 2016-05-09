@@ -52,10 +52,11 @@ class ServerDataHandler implements IDataHandler {
 		if ( packet instanceof CellBuildPacket ) {
 			game.getChanges().addAll(((CellBuildPacket) packet).chunks);
 		} else if ( packet instanceof ChallengeResponsePacket ) {
-			int generationPeriod = game.getGenerationPeriod();
-			int clientPeriod = (int) ((ChallengeResponsePacket) packet).time / (NetworkConfig.CHALLENGE_GENERATIONS
-					* NetworkConfig.CHALLENGE_CHUNK_SQRT * NetworkConfig.CHALLENGE_CHUNK_SQRT)
-					- NetworkConfig.SIMULATOR_PERIOD_TOLERANCE;
+			double generationPeriod = game.getGenerationPeriod();
+			double clientPeriod = ((ChallengeResponsePacket) packet).time
+					/ (double) (NetworkConfig.CHALLENGE_GENERATIONS * NetworkConfig.CHALLENGE_CHUNK_SQRT
+							* NetworkConfig.CHALLENGE_CHUNK_SQRT)
+					- (double) NetworkConfig.SIMULATOR_PERIOD_TOLERANCE;
 			if ( clientPeriod < generationPeriod ) {
 				game.setGenerationPeriod(clientPeriod);
 				broadcast(new SetSpeedPacket(clientPeriod));

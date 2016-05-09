@@ -14,7 +14,7 @@ public class ChallengeResponsePacket implements IPacket {
 	/**
 	 * The time it took to complete the challenge in milliseconds
 	 */
-	public long time;
+	public double time;
 
 	@Override
 	public void load(DataInputStream data) throws IOException {
@@ -23,7 +23,7 @@ public class ChallengeResponsePacket implements IPacket {
 
 	@Override
 	public void save(DataOutputStream data) throws IOException {
-		data.writeLong(time);
+		data.writeDouble(time);
 	}
 
 	@Override
@@ -35,7 +35,9 @@ public class ChallengeResponsePacket implements IPacket {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (time ^ (time >>> 32));
+		long temp;
+		temp = Double.doubleToLongBits(time);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -51,7 +53,7 @@ public class ChallengeResponsePacket implements IPacket {
 			return false;
 		}
 		ChallengeResponsePacket other = (ChallengeResponsePacket) obj;
-		if ( time != other.time ) {
+		if ( Double.doubleToLongBits(time) != Double.doubleToLongBits(other.time) ) {
 			return false;
 		}
 		return true;
@@ -68,7 +70,7 @@ public class ChallengeResponsePacket implements IPacket {
 	 * @param time
 	 *            The time it took to complete the challenge in milliseconds
 	 */
-	public ChallengeResponsePacket(long time) {
+	public ChallengeResponsePacket(double time) {
 		this.time = time;
 	}
 }

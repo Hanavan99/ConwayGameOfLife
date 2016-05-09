@@ -13,16 +13,16 @@ public class SetSpeedPacket implements IPacket {
 	/**
 	 * The time in milliseconds between each generation
 	 */
-	public int generationPeriod;
+	public double generationPeriod;
 
 	@Override
 	public void load(DataInputStream data) throws IOException {
-		generationPeriod = data.readInt();
+		generationPeriod = data.readDouble();
 	}
 
 	@Override
 	public void save(DataOutputStream data) throws IOException {
-		data.writeInt(generationPeriod);
+		data.writeDouble(generationPeriod);
 	}
 
 	@Override
@@ -34,7 +34,9 @@ public class SetSpeedPacket implements IPacket {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + generationPeriod;
+		long temp;
+		temp = Double.doubleToLongBits(generationPeriod);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
@@ -50,7 +52,7 @@ public class SetSpeedPacket implements IPacket {
 			return false;
 		}
 		SetSpeedPacket other = (SetSpeedPacket) obj;
-		if ( generationPeriod != other.generationPeriod ) {
+		if ( Double.doubleToLongBits(generationPeriod) != Double.doubleToLongBits(other.generationPeriod) ) {
 			return false;
 		}
 		return true;
@@ -67,7 +69,7 @@ public class SetSpeedPacket implements IPacket {
 	 * @param generationPeriod
 	 *            The time in milliseconds between each generation
 	 */
-	public SetSpeedPacket(int generationPeriod) {
+	public SetSpeedPacket(double generationPeriod) {
 		this.generationPeriod = generationPeriod;
 	}
 }

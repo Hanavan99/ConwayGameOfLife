@@ -19,7 +19,7 @@ public class Game implements ISerializable {
 	private Game challenge;
 	private String message;
 	private final List<Chunk> changes;
-	private int generationPeriod;
+	private double generationPeriod;
 	private Consumer<List<Chunk>> changeAccepted;
 
 	/**
@@ -101,7 +101,7 @@ public class Game implements ISerializable {
 	 * 
 	 * @return The time
 	 */
-	public int getGenerationPeriod() {
+	public double getGenerationPeriod() {
 		return generationPeriod;
 	}
 
@@ -111,7 +111,7 @@ public class Game implements ISerializable {
 	 * @param generationPeriod
 	 *            The time
 	 */
-	public void setGenerationPeriod(int generationPeriod) {
+	public void setGenerationPeriod(double generationPeriod) {
 		this.generationPeriod = generationPeriod;
 	}
 
@@ -201,7 +201,7 @@ public class Game implements ISerializable {
 			chunk.load(data);
 			changes.add(chunk);
 		}
-		generationPeriod = data.readInt();
+		generationPeriod = data.readDouble();
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class Game implements ISerializable {
 		for ( Chunk chunk : changes ) {
 			chunk.save(data);
 		}
-		data.writeInt(generationPeriod);
+		data.writeDouble(generationPeriod);
 	}
 
 	@Override
@@ -237,7 +237,9 @@ public class Game implements ISerializable {
 		result = prime * result + ((changeAccepted == null) ? 0 : changeAccepted.hashCode());
 		result = prime * result + ((changes == null) ? 0 : changes.hashCode());
 		result = prime * result + ((chunks == null) ? 0 : chunks.hashCode());
-		result = prime * result + generationPeriod;
+		long temp;
+		temp = Double.doubleToLongBits(generationPeriod);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((server == null) ? 0 : server.hashCode());
@@ -284,7 +286,7 @@ public class Game implements ISerializable {
 		} else if ( !chunks.equals(other.chunks) ) {
 			return false;
 		}
-		if ( generationPeriod != other.generationPeriod ) {
+		if ( Double.doubleToLongBits(generationPeriod) != Double.doubleToLongBits(other.generationPeriod) ) {
 			return false;
 		}
 		if ( message == null ) {
@@ -349,7 +351,7 @@ public class Game implements ISerializable {
 	 *            The method to call when a change is accepted
 	 */
 	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message,
-			List<Chunk> changes, int generationPeriod, Consumer<List<Chunk>> changeAccepted) {
+			List<Chunk> changes, double generationPeriod, Consumer<List<Chunk>> changeAccepted) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
