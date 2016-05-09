@@ -33,6 +33,7 @@ public abstract class PacketFactory {
 		register(new PlayerImagePacket(null));
 		register(new ChunkListImagePacket(null));
 		register(new PlayerListImagePacket(null));
+		register(new CellBuildPacket(null));
 	}
 
 	/**
