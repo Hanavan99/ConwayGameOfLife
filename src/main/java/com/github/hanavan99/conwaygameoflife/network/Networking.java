@@ -18,6 +18,7 @@ import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 public class Networking extends Thread {
 	private static final Logger log = LogManager.getLogger();
 	private final Game game;
+	private ServerInfo reconnect;
 
 	/**
 	 * Gets the game model
@@ -26,6 +27,25 @@ public class Networking extends Thread {
 	 */
 	Game getGame() {
 		return game;
+	}
+
+	/**
+	 * Gets the server to reconnect to after the connection fails
+	 * 
+	 * @return The server
+	 */
+	ServerInfo getReconnect() {
+		return reconnect;
+	}
+
+	/**
+	 * Sets the server to reconnect to after the connection fails
+	 * 
+	 * @param reconnect
+	 *            The server
+	 */
+	void setReconnect(ServerInfo reconnect) {
+		this.reconnect = reconnect;
 	}
 
 	@Override
@@ -41,18 +61,28 @@ public class Networking extends Thread {
 				if ( server.isServer() ) {
 					new NetworkServer(this);
 				} else {
-					NetworkClient client = new NetworkClient(this, new ClientDataHandler(game));
+					NetworkClient client = new NetworkClient(this, new ClientDataHandler(game, this));
 					client.send(new HelloPacket());
 					client.run();
 				}
 			} catch ( final IOException ex ) {
 				log.catching(ex);
 			}
+			if ( reconnect != null ) {
+				server.setIp(reconnect.getIp());
+				server.setPort(reconnect.getPort());
+			}
 			// After the constructors return, the connection is closed
 			server.setState(ConnectionState.Disconnected);
-			// Wait for the server to become ready again
-			while ( server.getState() == ConnectionState.Disconnected ) {
-				Thread.yield();
+			// Wait for the server to become ready again unless a reconnect was
+			// requested
+			if ( reconnect == null ) {
+				while ( server.getState() == ConnectionState.Disconnected ) {
+					Thread.yield();
+				}
+			} else {
+				server.setState(ConnectionState.Connecting);
+				reconnect = null;
 			}
 		}
 	}
