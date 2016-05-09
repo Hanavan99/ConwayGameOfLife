@@ -35,6 +35,7 @@ public abstract class PacketFactory {
 		register(new PlayerListImagePacket(null));
 		register(new CellBuildPacket(null));
 		register(new SwitchServerPacket(null));
+		register(new MessagePacket(null));
 	}
 
 	/**
