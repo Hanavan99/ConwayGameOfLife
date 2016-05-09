@@ -176,5 +176,15 @@ class ServerDataHandler implements IDataHandler {
 				ex = e;
 			}
 		});
+		long before = System.currentTimeMillis();
+		game.setChallenge(challenge);
+		while ( challenge.getChunks().get(0).getGeneration() < NetworkConfig.CHALLENGE_GENERATIONS ) {
+			Thread.yield();
+		}
+		long after = System.currentTimeMillis();
+		double serverPeriod = ((double) (after - before)) / (double) (NetworkConfig.CHALLENGE_GENERATIONS
+				* NetworkConfig.CHALLENGE_CHUNK_SQRT * NetworkConfig.CHALLENGE_CHUNK_SQRT)
+				- (double) NetworkConfig.SIMULATOR_PERIOD_TOLERANCE;
+		game.setGenerationPeriod(serverPeriod);
 	}
 }
