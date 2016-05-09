@@ -18,6 +18,7 @@ public class Game implements ISerializable {
 	private Game challenge;
 	private String message;
 	private final List<Chunk> changes;
+	private int generationPeriod;
 
 	/**
 	 * Gets the information about the server.
@@ -93,10 +94,29 @@ public class Game implements ISerializable {
 		return changes;
 	}
 
+	/**
+	 * Gets the time in milliseconds between each generation
+	 * 
+	 * @return The time
+	 */
+	public int getGenerationPeriod() {
+		return generationPeriod;
+	}
+
+	/**
+	 * Sets the time in milliseconds between each generation
+	 * 
+	 * @param generationPeriod
+	 *            The time
+	 */
+	public void setGenerationPeriod(int generationPeriod) {
+		this.generationPeriod = generationPeriod;
+	}
+
 	@Override
 	public Game clone() {
 		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
-				message, new ArrayList<Chunk>());
+				message, new ArrayList<Chunk>(), generationPeriod);
 		for ( Player player : players ) {
 			game.players.add(player.clone());
 		}
@@ -142,6 +162,7 @@ public class Game implements ISerializable {
 			chunk.load(data);
 			changes.add(chunk);
 		}
+		generationPeriod = data.readInt();
 	}
 
 	@Override
@@ -166,6 +187,7 @@ public class Game implements ISerializable {
 		for ( Chunk chunk : changes ) {
 			chunk.save(data);
 		}
+		data.writeInt(generationPeriod);
 	}
 
 	@Override
@@ -175,6 +197,7 @@ public class Game implements ISerializable {
 		result = prime * result + ((challenge == null) ? 0 : challenge.hashCode());
 		result = prime * result + ((changes == null) ? 0 : changes.hashCode());
 		result = prime * result + ((chunks == null) ? 0 : chunks.hashCode());
+		result = prime * result + generationPeriod;
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((server == null) ? 0 : server.hashCode());
@@ -214,6 +237,9 @@ public class Game implements ISerializable {
 		} else if ( !chunks.equals(other.chunks) ) {
 			return false;
 		}
+		if ( generationPeriod != other.generationPeriod ) {
+			return false;
+		}
 		if ( message == null ) {
 			if ( other.message != null ) {
 				return false;
@@ -241,7 +267,7 @@ public class Game implements ISerializable {
 	@Override
 	public String toString() {
 		return "Game [server=" + server + ", players=" + players + ", chunks=" + chunks + ", challenge=" + challenge
-				+ ", message=" + message + ", changes=" + changes + "]";
+				+ ", message=" + message + ", changes=" + changes + ", generationPeriod=" + generationPeriod + "]";
 	}
 
 	/**
@@ -269,14 +295,17 @@ public class Game implements ISerializable {
 	 *            The message to tell the user
 	 * @param changes
 	 *            The list of built changes
+	 * @param generationPeriod
+	 *            The time in milliseconds between each generation
 	 */
 	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message,
-			List<Chunk> changes) {
+			List<Chunk> changes, int generationPeriod) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
 		this.challenge = challenge;
 		this.message = message;
 		this.changes = changes;
+		this.generationPeriod = generationPeriod;
 	}
 }
