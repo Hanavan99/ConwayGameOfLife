@@ -34,6 +34,7 @@ public abstract class PacketFactory {
 		register(new ChunkListImagePacket(null));
 		register(new PlayerListImagePacket(null));
 		register(new CellBuildPacket(null));
+		register(new SwitchServerPacket(null));
 	}
 
 	/**
