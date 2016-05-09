@@ -61,6 +61,27 @@ public class GameView {
 	}
 
 	/**
+	 * Kills the cell at a position
+	 * 
+	 * @param x
+	 *            The x-coordinate
+	 * @param y
+	 *            The y-coordinate
+	 */
+	public void kill(int x, int y) {
+		int cx = x / 64;
+		int cy = y / 64;
+		int sx = x % 64;
+		int sy = y % 64;
+		for ( Chunk chunk : game.getChunks() ) {
+			if ( chunk.getX() == cx && chunk.getY() == cy && chunk.getDataBit(sx, sy) ) {
+				chunk.setDataBit(sx, sy, false);
+				return;
+			}
+		}
+	}
+
+	/**
 	 * Gets the total size of the game in tiles to the nearest chunk
 	 * 
 	 * @return The size
