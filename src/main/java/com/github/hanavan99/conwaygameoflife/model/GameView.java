@@ -1,5 +1,8 @@
 package com.github.hanavan99.conwaygameoflife.model;
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
+
 /**
  * Allows code to access the field as a whole, not just in chunk parts.
  * 
@@ -54,6 +57,90 @@ public class GameView {
 				return;
 			}
 		}
+	}
+
+	/**
+	 * Gets the total size of the game in tiles to the nearest chunk
+	 * 
+	 * @return The size
+	 * @see GameView#totalSizeExact()
+	 */
+	public Rectangle totalSize() {
+		int minX = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		for ( Chunk chunk : game.getChunks() ) {
+			int x = chunk.getX();
+			int y = chunk.getY();
+			minX = Math.min(minX, x);
+			maxX = Math.max(maxX, x);
+			minY = Math.min(minY, y);
+			maxY = Math.max(maxY, y);
+		}
+		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+	}
+
+	/**
+	 * Gets the total size of the game in tiles to the nearest tile
+	 * 
+	 * @return The size
+	 * @see GameView#totalSize()
+	 */
+	public Rectangle totalSizeExact() {
+		int minX = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxY = Integer.MIN_VALUE;
+		for ( Chunk chunk : game.getChunks() ) {
+			int cx = chunk.getX();
+			int cy = chunk.getY();
+			if ( cx * 64 < minX ) {
+				int x;
+				top: for ( x = 0; x < 64; ++x ) {
+					for ( int y = 0; y < 64; ++y ) {
+						if ( chunk.getDataBit(x, y) ) {
+							break top;
+						}
+					}
+				}
+				minX = Math.min(minX, cx * 64 + x);
+			}
+			if ( cx * 64 + 63 > maxX ) {
+				int x;
+				top: for ( x = 63; x >= 0; --x ) {
+					for ( int y = 0; y < 64; ++y ) {
+						if ( chunk.getDataBit(x, y) ) {
+							break top;
+						}
+					}
+				}
+				maxX = Math.min(maxX, cx * 64 + x);
+			}
+			if ( cy * 64 < minY ) {
+				int y;
+				top: for ( y = 0; y < 64; ++y ) {
+					for ( int x = 0; x < 64; ++x ) {
+						if ( chunk.getDataBit(x, y) ) {
+							break top;
+						}
+					}
+				}
+				minY = Math.min(minY, cy * 64 + y);
+			}
+			if ( cy * 64 + 63 > maxY ) {
+				int y;
+				top: for ( y = 63; y >= 0; --y ) {
+					for ( int x = 0; x < 64; ++x ) {
+						if ( chunk.getDataBit(x, y) ) {
+							break top;
+						}
+					}
+				}
+				maxY = Math.min(maxY, cy * 64 + y);
+			}
+		}
+		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
 	}
 
 	/**
