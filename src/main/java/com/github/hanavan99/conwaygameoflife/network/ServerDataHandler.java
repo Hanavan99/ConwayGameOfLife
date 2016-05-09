@@ -6,12 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.hanavan99.conwaygameoflife.model.Chunk;
+import com.github.hanavan99.conwaygameoflife.model.ChunkHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.model.Game;
+import com.github.hanavan99.conwaygameoflife.model.GenerationHashKey;
 import com.github.hanavan99.conwaygameoflife.model.Player;
+import com.github.hanavan99.conwaygameoflife.model.PlayerHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.network.packets.CellBuildPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.ChallengePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.ChallengeResponsePacket;
-import com.github.hanavan99.conwaygameoflife.network.packets.ChunkHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.network.packets.ChunkImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.ChunkListImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.HashPacket;
@@ -19,7 +21,6 @@ import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.LoginPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.MessagePacket;
-import com.github.hanavan99.conwaygameoflife.network.packets.PlayerHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerListImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.SetSpeedPacket;
@@ -68,52 +69,61 @@ class ServerDataHandler implements IDataHandler {
 		} else if ( packet instanceof ChunkListImagePacket ) {
 			throw new InvalidPacketException("ChunkListImagePacket should only be sent to the client");
 		} else if ( packet instanceof HashPacket ) {
-			// TODO generation checking
 			switch ( ((HashPacket) packet).type ) {
 			case Chunk: {
 				ChunkHashIdentifier id = (ChunkHashIdentifier) ((HashPacket) packet).identifier;
-				Chunk ours = null;
-				for ( Chunk chunk : game.getChunks() ) {
-					if ( chunk.getX() == id.x && chunk.getY() == id.y
-							&& chunk.getPlayer().getName().equals(id.player.name) ) {
-						ours = chunk;
-						break;
+				int correct = game.getHash(new GenerationHashKey(((HashPacket) packet).generation, id));
+				if ( ((HashPacket) packet).hash != correct ) {
+					if ( correct == 0 ) {
+						client.send(new ChunkImagePacket(new Chunk(new Player(id.player.name, null, 0, 0), id.x, id.y),
+								true));
+					} else {
+						Chunk ours = null;
+						for ( Chunk chunk : game.getChunks() ) {
+							if ( chunk.getX() == id.x && chunk.getY() == id.y
+									&& chunk.getPlayer().getName().equals(id.player.name) ) {
+								ours = chunk;
+								break;
+							}
+						}
+						client.send(new ChunkImagePacket(ours, false));
 					}
 				}
-				if ( ours == null ) {
-					client.send(
-							new ChunkImagePacket(new Chunk(new Player(id.player.name, null, 0, 0), id.x, id.y), true));
-				} else if ( ours.hashCode() != ((HashPacket) packet).hash ) {
-					client.send(new ChunkImagePacket(ours, false));
-				}
-			}
 				break;
-			case ChunkLength:
-				if ( ((HashPacket) packet).hash != game.getChunks().size() ) {
+			}
+			case ChunkLength: {
+				int correct = game.getChunkHash(((HashPacket) packet).generation);
+				if ( ((HashPacket) packet).hash != correct ) {
 					client.send(new ChunkListImagePacket(game.getChunks()));
 				}
 				break;
+			}
 			case Player: {
 				PlayerHashIdentifier id = (PlayerHashIdentifier) ((HashPacket) packet).identifier;
-				Player ours = null;
-				for ( Player player : game.getPlayers() ) {
-					if ( player.getName().equals(id.name) ) {
-						ours = player;
-						break;
+				int correct = game.getHash(new GenerationHashKey(((HashPacket) packet).generation, id));
+				if ( ((HashPacket) packet).hash != correct ) {
+					if ( correct == 0 ) {
+						client.send(new PlayerImagePacket(new Player(id.name, null, 0, 0), true));
+					} else {
+						Player ours = null;
+						for ( Player player : game.getPlayers() ) {
+							if ( player.getName().equals(id.name) ) {
+								ours = player;
+								break;
+							}
+						}
+						client.send(new PlayerImagePacket(ours, false));
 					}
 				}
-				if ( ours == null ) {
-					client.send(new PlayerImagePacket(new Player(id.name, null, 0, 0), true));
-				} else if ( ours.hashCode() != ((HashPacket) packet).hash ) {
-					client.send(new PlayerImagePacket(ours, false));
-				}
-			}
 				break;
-			case PlayerLength:
-				if ( ((HashPacket) packet).hash != game.getPlayers().size() ) {
+			}
+			case PlayerLength: {
+				int correct = game.getPlayerHash(((HashPacket) packet).generation);
+				if ( ((HashPacket) packet).hash != correct ) {
 					client.send(new PlayerListImagePacket(game.getPlayers()));
 				}
 				break;
+			}
 			default:
 				throw new InvalidPacketException("Invalid hash packet type");
 			}

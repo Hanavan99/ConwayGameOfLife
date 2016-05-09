@@ -1,11 +1,8 @@
-package com.github.hanavan99.conwaygameoflife.network.packets;
+package com.github.hanavan99.conwaygameoflife.model;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.github.hanavan99.conwaygameoflife.model.Chunk;
-import com.github.hanavan99.conwaygameoflife.model.ISerializable;
 
 /**
  * Identifier for locating chunks

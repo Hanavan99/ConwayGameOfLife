@@ -1,11 +1,8 @@
-package com.github.hanavan99.conwaygameoflife.network.packets;
+package com.github.hanavan99.conwaygameoflife.model;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
-import com.github.hanavan99.conwaygameoflife.model.ISerializable;
-import com.github.hanavan99.conwaygameoflife.model.Player;
 
 /**
  * Identifier for locating players

@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.github.hanavan99.conwaygameoflife.model.Chunk;
+import com.github.hanavan99.conwaygameoflife.model.ChunkHashIdentifier;
+import com.github.hanavan99.conwaygameoflife.model.IHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.model.Player;
+import com.github.hanavan99.conwaygameoflife.model.PlayerHashIdentifier;
 
 /**
  * A packet containing an object's hash so the server can verify the client has

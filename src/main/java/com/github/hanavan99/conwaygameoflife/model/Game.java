@@ -4,7 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -21,6 +23,9 @@ public class Game implements ISerializable {
 	private final List<Chunk> changes;
 	private double generationPeriod;
 	private Consumer<List<Chunk>> changeAccepted;
+	private final Map<GenerationHashKey, Integer> hashes;
+	private final Map<Integer, Integer> chunkListHashes;
+	private final Map<Integer, Integer> playerListHashes;
 
 	/**
 	 * Gets the information about the server.
@@ -152,10 +157,62 @@ public class Game implements ISerializable {
 		this.changeAccepted = changeAccepted;
 	}
 
+	/**
+	 * Takes a snapshot of all of the hashes of all of the objects.
+	 * 
+	 * @param generation
+	 *            The current generation
+	 */
+	public void snapshotHashes(int generation) {
+		chunkListHashes.put(generation, chunks.size());
+		playerListHashes.put(generation, players.size());
+		for ( Chunk chunk : chunks ) {
+			hashes.put(new GenerationHashKey(chunk), chunk.hashCode());
+		}
+		for ( Player player : players ) {
+			hashes.put(new GenerationHashKey(player, generation), player.hashCode());
+		}
+	}
+
+	/**
+	 * Gets the hash of an object at a specified time
+	 * 
+	 * @param key
+	 *            The key to get the hash from
+	 * @return The hash
+	 */
+	public int getHash(GenerationHashKey key) {
+		return hashes.get(key);
+	}
+
+	/**
+	 * Gets the hash of the list of chunks at a specified time
+	 * 
+	 * @param generation
+	 *            The generation to get the hash from
+	 * @return The hash
+	 */
+	public int getChunkHash(int generation) {
+		return chunkListHashes.get(generation);
+	}
+
+	/**
+	 * Gets the hash of the list of players at a specified time
+	 * 
+	 * @param generation
+	 *            The generation to get the hash from
+	 * @return The hash
+	 */
+	public int getPlayerHash(int generation) {
+		return playerListHashes.get(generation);
+	}
+
 	@Override
 	public Game clone() {
 		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
-				message, new ArrayList<Chunk>(), generationPeriod, changeAccepted);
+				message, new ArrayList<Chunk>(), generationPeriod, changeAccepted,
+				new HashMap<GenerationHashKey, Integer>(), new HashMap<Integer, Integer>(),
+				new HashMap<Integer, Integer>());
 		for ( Player player : players ) {
 			game.players.add(player.clone());
 		}
@@ -164,6 +221,15 @@ public class Game implements ISerializable {
 		}
 		for ( Chunk chunk : changes ) {
 			game.changes.add(chunk.clone());
+		}
+		for ( GenerationHashKey key : hashes.keySet() ) {
+			game.hashes.put(key.clone(), hashes.get(key));
+		}
+		for ( int key : chunkListHashes.keySet() ) {
+			game.chunkListHashes.put(key, chunkListHashes.get(key));
+		}
+		for ( int key : playerListHashes.keySet() ) {
+			game.playerListHashes.put(key, playerListHashes.get(key));
 		}
 		return game;
 	}
@@ -202,6 +268,28 @@ public class Game implements ISerializable {
 			changes.add(chunk);
 		}
 		generationPeriod = data.readDouble();
+		len = data.readInt();
+		hashes.clear();
+		for ( int i = 0; i < len; ++i ) {
+			GenerationHashKey key = new GenerationHashKey(0, null);
+			key.load(data);
+			int value = data.readInt();
+			hashes.put(key, value);
+		}
+		len = data.readInt();
+		chunkListHashes.clear();
+		for ( int i = 0; i < len; ++i ) {
+			int key = data.readInt();
+			int value = data.readInt();
+			chunkListHashes.put(key, value);
+		}
+		len = data.readInt();
+		playerListHashes.clear();
+		for ( int i = 0; i < len; ++i ) {
+			int key = data.readInt();
+			int value = data.readInt();
+			playerListHashes.put(key, value);
+		}
 	}
 
 	@Override
@@ -227,6 +315,21 @@ public class Game implements ISerializable {
 			chunk.save(data);
 		}
 		data.writeDouble(generationPeriod);
+		data.writeInt(hashes.size());
+		for ( GenerationHashKey key : hashes.keySet() ) {
+			key.save(data);
+			data.writeInt(hashes.get(key));
+		}
+		data.writeInt(chunkListHashes.size());
+		for ( int key : chunkListHashes.keySet() ) {
+			data.writeInt(key);
+			data.writeInt(chunkListHashes.get(key));
+		}
+		data.writeInt(playerListHashes.size());
+		for ( int key : playerListHashes.keySet() ) {
+			data.writeInt(key);
+			data.writeInt(playerListHashes.get(key));
+		}
 	}
 
 	@Override
@@ -236,11 +339,14 @@ public class Game implements ISerializable {
 		result = prime * result + ((challenge == null) ? 0 : challenge.hashCode());
 		result = prime * result + ((changeAccepted == null) ? 0 : changeAccepted.hashCode());
 		result = prime * result + ((changes == null) ? 0 : changes.hashCode());
+		result = prime * result + ((chunkListHashes == null) ? 0 : chunkListHashes.hashCode());
 		result = prime * result + ((chunks == null) ? 0 : chunks.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(generationPeriod);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((hashes == null) ? 0 : hashes.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((playerListHashes == null) ? 0 : playerListHashes.hashCode());
 		result = prime * result + ((players == null) ? 0 : players.hashCode());
 		result = prime * result + ((server == null) ? 0 : server.hashCode());
 		return result;
@@ -279,6 +385,13 @@ public class Game implements ISerializable {
 		} else if ( !changes.equals(other.changes) ) {
 			return false;
 		}
+		if ( chunkListHashes == null ) {
+			if ( other.chunkListHashes != null ) {
+				return false;
+			}
+		} else if ( !chunkListHashes.equals(other.chunkListHashes) ) {
+			return false;
+		}
 		if ( chunks == null ) {
 			if ( other.chunks != null ) {
 				return false;
@@ -289,11 +402,25 @@ public class Game implements ISerializable {
 		if ( Double.doubleToLongBits(generationPeriod) != Double.doubleToLongBits(other.generationPeriod) ) {
 			return false;
 		}
+		if ( hashes == null ) {
+			if ( other.hashes != null ) {
+				return false;
+			}
+		} else if ( !hashes.equals(other.hashes) ) {
+			return false;
+		}
 		if ( message == null ) {
 			if ( other.message != null ) {
 				return false;
 			}
 		} else if ( !message.equals(other.message) ) {
+			return false;
+		}
+		if ( playerListHashes == null ) {
+			if ( other.playerListHashes != null ) {
+				return false;
+			}
+		} else if ( !playerListHashes.equals(other.playerListHashes) ) {
 			return false;
 		}
 		if ( players == null ) {
@@ -317,7 +444,8 @@ public class Game implements ISerializable {
 	public String toString() {
 		return "Game [server=" + server + ", players=" + players + ", chunks=" + chunks + ", challenge=" + challenge
 				+ ", message=" + message + ", changes=" + changes + ", generationPeriod=" + generationPeriod
-				+ ", changeAccepted=" + changeAccepted + "]";
+				+ ", changeAccepted=" + changeAccepted + ", hashes=" + hashes + ", chunkListHashes=" + chunkListHashes
+				+ ", playerListHashes=" + playerListHashes + "]";
 	}
 
 	/**
@@ -328,6 +456,9 @@ public class Game implements ISerializable {
 		players = new ArrayList<Player>();
 		chunks = new ArrayList<Chunk>();
 		changes = new ArrayList<Chunk>();
+		hashes = new HashMap<GenerationHashKey, Integer>();
+		chunkListHashes = new HashMap<Integer, Integer>();
+		playerListHashes = new HashMap<Integer, Integer>();
 	}
 
 	/**
@@ -349,9 +480,17 @@ public class Game implements ISerializable {
 	 *            The time in milliseconds between each generation
 	 * @param changeAccepted
 	 *            The method to call when a change is accepted
+	 * @param hashes
+	 *            The map of old hashes
+	 * @param chunkListHashes
+	 *            The map of old chunk list hashes
+	 * @param playerListHashes
+	 *            The map of old player list hashes
 	 */
 	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message,
-			List<Chunk> changes, double generationPeriod, Consumer<List<Chunk>> changeAccepted) {
+			List<Chunk> changes, double generationPeriod, Consumer<List<Chunk>> changeAccepted,
+			Map<GenerationHashKey, Integer> hashes, Map<Integer, Integer> chunkListHashes,
+			Map<Integer, Integer> playerListHashes) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
@@ -360,5 +499,8 @@ public class Game implements ISerializable {
 		this.changes = changes;
 		this.generationPeriod = generationPeriod;
 		this.changeAccepted = changeAccepted;
+		this.hashes = hashes;
+		this.chunkListHashes = chunkListHashes;
+		this.playerListHashes = playerListHashes;
 	}
 }
