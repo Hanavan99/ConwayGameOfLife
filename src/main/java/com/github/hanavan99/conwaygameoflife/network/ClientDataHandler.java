@@ -56,6 +56,7 @@ class ClientDataHandler implements IDataHandler {
 				Thread.yield();
 			}
 			long after = System.currentTimeMillis();
+			game.setChallenge(null);
 			client.send(new ChallengeResponsePacket(after - before));
 		} else if ( packet instanceof ChunkImagePacket ) {
 			Chunk target = ((ChunkImagePacket) packet).obj;

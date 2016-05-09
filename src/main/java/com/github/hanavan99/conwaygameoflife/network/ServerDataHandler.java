@@ -182,6 +182,7 @@ class ServerDataHandler implements IDataHandler {
 			Thread.yield();
 		}
 		long after = System.currentTimeMillis();
+		game.setChallenge(null);
 		double serverPeriod = ((double) (after - before)) / (double) (NetworkConfig.CHALLENGE_GENERATIONS
 				* NetworkConfig.CHALLENGE_CHUNK_SQRT * NetworkConfig.CHALLENGE_CHUNK_SQRT)
 				- (double) NetworkConfig.SIMULATOR_PERIOD_TOLERANCE;
