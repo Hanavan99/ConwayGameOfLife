@@ -48,7 +48,15 @@ class ClientDataHandler implements IDataHandler {
 		} else if ( packet instanceof ChallengeResponsePacket ) {
 			throw new InvalidPacketException("ChallengeResponsePacket should only be sent to the server");
 		} else if ( packet instanceof ChallengePacket ) {
-			game.setChallenge(((ChallengePacket) packet).game);
+			Game challenge = ((ChallengePacket) packet).game;
+			int target = ((ChallengePacket) packet).targetGeneration;
+			long before = System.currentTimeMillis();
+			game.setChallenge(challenge);
+			while ( challenge.getChunks().get(0).getGeneration() < target ) {
+				Thread.yield();
+			}
+			long after = System.currentTimeMillis();
+			client.send(new ChallengeResponsePacket(after - before));
 		} else if ( packet instanceof ChunkImagePacket ) {
 			Chunk target = ((ChunkImagePacket) packet).obj;
 			Chunk old = null;
