@@ -22,6 +22,7 @@ import com.github.hanavan99.conwaygameoflife.network.packets.MessagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerHashIdentifier;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerListImagePacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.SetSpeedPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.SwitchServerPacket;
 
 /**
@@ -118,6 +119,8 @@ class ServerDataHandler implements IDataHandler {
 			throw new InvalidPacketException("PlayerImagePacket should only be sent to the client");
 		} else if ( packet instanceof PlayerListImagePacket ) {
 			throw new InvalidPacketException("PlayerListImagePacket should only be sent to the client");
+		} else if ( packet instanceof SetSpeedPacket ) {
+			throw new InvalidPacketException("SetSpeedPacket should only be sent to the client");
 		} else if ( packet instanceof SwitchServerPacket ) {
 			throw new InvalidPacketException("SwitchServerPacket should only be sent to the client");
 		} else {

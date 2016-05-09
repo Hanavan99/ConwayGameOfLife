@@ -27,6 +27,7 @@ import com.github.hanavan99.conwaygameoflife.network.packets.LoginPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.MessagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerImagePacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.PlayerListImagePacket;
+import com.github.hanavan99.conwaygameoflife.network.packets.SetSpeedPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.SwitchServerPacket;
 
 /**
@@ -120,6 +121,8 @@ class ClientDataHandler implements IDataHandler {
 				client.send(new HashPacket(new ArrayList<Chunk>(), HashType.ChunkLength,
 						game.getChunks().get(0).getGeneration()));
 			}
+		} else if ( packet instanceof SetSpeedPacket ) {
+			// TODO set simulator speed
 		} else if ( packet instanceof SwitchServerPacket ) {
 			net.setReconnect(((SwitchServerPacket) packet).server);
 			throw new IOException("Switching servers");
