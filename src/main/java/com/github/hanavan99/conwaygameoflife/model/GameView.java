@@ -78,7 +78,7 @@ public class GameView {
 			minY = Math.min(minY, y);
 			maxY = Math.max(maxY, y);
 		}
-		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+		return new Rectangle(minX * 64, minY * 64, (maxX - minX) * 64, (maxY - minY) * 64);
 	}
 
 	/**
