@@ -20,7 +20,7 @@ public class Game implements ISerializable {
 	private String message;
 	private final List<Chunk> changes;
 	private int generationPeriod;
-	private Consumer<Chunk> changeAccepted;
+	private Consumer<List<Chunk>> changeAccepted;
 
 	/**
 	 * Gets the information about the server.
@@ -122,7 +122,7 @@ public class Game implements ISerializable {
 	 * 
 	 * @return The method
 	 */
-	public Consumer<Chunk> getChangeAccepted() {
+	public Consumer<List<Chunk>> getChangeAccepted() {
 		return changeAccepted;
 	}
 
@@ -133,7 +133,7 @@ public class Game implements ISerializable {
 	 *            The method
 	 * @see Consumer#andThen(Consumer)
 	 */
-	public void addChangeAccepted(Consumer<Chunk> changeAccepted) {
+	public void addChangeAccepted(Consumer<List<Chunk>> changeAccepted) {
 		if ( this.changeAccepted == null ) {
 			this.changeAccepted = changeAccepted;
 		} else {
@@ -148,7 +148,7 @@ public class Game implements ISerializable {
 	 *            The method
 	 * @see Game#addChangeAccepted(Consumer)
 	 */
-	public void setChangeAccepted(Consumer<Chunk> changeAccepted) {
+	public void setChangeAccepted(Consumer<List<Chunk>> changeAccepted) {
 		this.changeAccepted = changeAccepted;
 	}
 
@@ -349,7 +349,7 @@ public class Game implements ISerializable {
 	 *            The method to call when a change is accepted
 	 */
 	public Game(ServerInfo server, List<Player> players, List<Chunk> chunks, Game challenge, String message,
-			List<Chunk> changes, int generationPeriod, Consumer<Chunk> changeAccepted) {
+			List<Chunk> changes, int generationPeriod, Consumer<List<Chunk>> changeAccepted) {
 		this.server = server;
 		this.players = players;
 		this.chunks = chunks;
