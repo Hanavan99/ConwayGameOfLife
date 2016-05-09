@@ -47,7 +47,14 @@ class ServerDataHandler implements IDataHandler {
 			game.getChanges().addAll(((CellBuildPacket) packet).chunks);
 			// TODO broadcast changes to clients after the changes are accepted
 		} else if ( packet instanceof ChallengeResponsePacket ) {
-			// TODO variable tick speeds
+			int generationPeriod = game.getGenerationPeriod();
+			int clientPeriod = (int) ((ChallengeResponsePacket) packet).time / (NetworkConfig.CHALLENGE_GENERATIONS
+					* NetworkConfig.CHALLENGE_CHUNK_SQRT * NetworkConfig.CHALLENGE_CHUNK_SQRT)
+					- NetworkConfig.SIMULATOR_PERIOD_TOLERANCE;
+			if ( clientPeriod < generationPeriod ) {
+				game.setGenerationPeriod(clientPeriod);
+				broadcast(new SetSpeedPacket(clientPeriod));
+			}
 		} else if ( packet instanceof ChallengePacket ) {
 			throw new InvalidPacketException("ChallengePacket should only be sent to the client");
 		} else if ( packet instanceof ChunkImagePacket ) {
@@ -110,6 +117,7 @@ class ServerDataHandler implements IDataHandler {
 				throw new InvalidPacketException("Invalid client protocol version");
 			}
 			client.send(new HelloPacket());
+			// TODO challenge
 		} else if ( packet instanceof LoginPacket ) {
 			log.info("Client logged in with name {}", ((LoginPacket) packet).player.getName());
 			game.getPlayers().add(((LoginPacket) packet).player);
