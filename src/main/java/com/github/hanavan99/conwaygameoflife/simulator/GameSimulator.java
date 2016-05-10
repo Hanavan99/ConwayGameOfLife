@@ -21,7 +21,11 @@ class GameSimulator {
 	 */
 	int tick() {
 		int processed = 0;
+		Game clone = new Game();
 		for ( Chunk chunk : game.getChunks() ) {
+			clone.getChunks().add(chunk.clone());
+		}
+		for ( Chunk chunk : clone.getChunks() ) {
 			for ( int x = 0; x < 64; ++x ) {
 				for ( int y = 0; y < 64; ++y ) {
 					int gx = chunk.getX() * 64 + x;
@@ -42,6 +46,8 @@ class GameSimulator {
 			}
 			++processed;
 		}
+		game.getChunks().clear();
+		game.getChunks().addAll(clone.getChunks());
 		if ( game.getChunks().size() > 0 ) {
 			game.snapshotHashes(game.getChunks().get(0).getGeneration());
 		}
