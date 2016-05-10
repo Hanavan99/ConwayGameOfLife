@@ -30,6 +30,13 @@ configurations {
 			compile "com.sparkjava:spark-core:2.2"
 		}
 	}
+	appletDeploy {
+		dependencies {
+			compile files("lib/GUILogger.jar")
+			compile "org.apache.logging.log4j:log4j-api:2.5"
+			compile "org.apache.logging.log4j:log4j-core:2.5"
+		}
+	}
 }
 
 eclipse {
@@ -71,10 +78,30 @@ task deployJar(type: Jar) {
 	dependsOn jar
 }
 
+task unsignedAppletJar(type: Jar) {
+	from files(sourceSets.ui.output.classesDir)
+	from files(sourceSets.applet.output.classesDir)
+	from files(sourceSets.applet.output.resourcesDir)
+	from {
+		configurations.appletDeploy.collect {
+			zipTree(it)
+		}
+	}
+	exclude "META-INF/*"
+	manifest {
+		attributes "Permissions": "sandbox",
+			"Codebase": "hanavan99.github.io",
+			"Application-Name": "Conway's Game of Life"
+	}
+	baseName = "unsignedApplet"
+	dependsOn uiClasses
+	dependsOn appletClasses
+}
+
 task appletJar {
 	AntBuilder ant = getAnt()
 	File keystore = new File("deploy.jks")
-	File unsignedJar = jar.archivePath
+	File unsignedJar = unsignedAppletJar.archivePath
 	File signedJar = new File(unsignedJar.getParentFile(), "applet.jar")
 	getInputs().file(unsignedJar)
 	getOutputs().file(signedJar).upToDateWhen {
@@ -89,28 +116,39 @@ task appletJar {
 			signedjar: signedJar.getAbsolutePath()
 		)
 	}
-	dependsOn jar
+	dependsOn unsignedAppletJar
 }
 
-task stage {
-	//dependsOn appletJar
-	dependsOn deployJar
+task serverJar(type: Jar) {
+	from files(sourceSets.main.output.classesDir)
+	from files(sourceSets.main.output.resourcesDir)
+	manifest {
+		attributes "Main-Class": "com.github.hanavan99.conwaygameoflife.main.Main"
+	}
+	baseName = "server"
+	dependsOn classes
 }
 
 jar {
-	manifest {
-		attributes "Permissions": "sandbox",
-			"Codebase": "hanavan99.github.io",
-			"Application-Name": "Conway's Game of Life"
-	}
 	from files(sourceSets.ui.output.classesDir)
 	from files(sourceSets.ui.output.resourcesDir)
-	from files(sourceSets.applet.output.classesDir)
-	from files(sourceSets.applet.output.resourcesDir)
+	manifest {
+		attributes "Main-Class": "com.github.hanavan99.conwaygameoflife.main.Main"
+	}
+	baseName = "client"
+	dependsOn classes
 	dependsOn uiClasses
-	dependsOn appletClasses
+}
+
+task stage {
+	dependsOn deployJar
 }
 
 build {
 	dependsOn stage
+	dependsOn unsignedAppletJar
+	dependsOn serverJar
+	if ( new File("deploy.jks").exists() ) {
+		dependsOn appletJar
+	}
 }
