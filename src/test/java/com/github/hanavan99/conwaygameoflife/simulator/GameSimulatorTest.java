@@ -76,4 +76,9 @@ public class GameSimulatorTest {
 	public void blockTest() throws IOException {
 		test("block", 2, new Rectangle(0, 0, 1, 1), true, "default");
 	}
+
+	@Test
+	public void chunkBordersTest() throws IOException {
+		test("chunkBorders", 2, new Rectangle(0, 0, 2, 2), true, "default");
+	}
 }
