@@ -81,19 +81,34 @@ public class GameSimulatorTest {
 	public void chunkBordersTest() throws IOException {
 		test("chunkBorders", 2, new Rectangle(0, 0, 2, 2), true, "default");
 	}
-	
+
 	@Test
 	public void beehiveTest() throws IOException {
 		test("beehive", 2, new Rectangle(0, 0, 1, 1), true, "default");
 	}
-	
+
 	@Test
 	public void loafTest() throws IOException {
 		test("loaf", 2, new Rectangle(0, 0, 1, 1), true, "default");
 	}
-	
+
 	@Test
 	public void boatTest() throws IOException {
 		test("boat", 2, new Rectangle(0, 0, 1, 1), true, "default");
+	}
+
+	@Test
+	public void blinkerTest() throws IOException {
+		test("blinker", 2, new Rectangle(0, 0, 1, 1), true, "default");
+	}
+
+	@Test
+	public void toadTest() throws IOException {
+		test("toad", 2, new Rectangle(0, 0, 1, 1), true, "default");
+	}
+
+	@Test
+	public void beaconTest() throws IOException {
+		test("beacon", 2, new Rectangle(0, 0, 1, 1), true, "default");
 	}
 }
