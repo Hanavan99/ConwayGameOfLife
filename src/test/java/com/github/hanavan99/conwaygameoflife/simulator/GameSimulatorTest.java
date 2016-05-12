@@ -165,6 +165,11 @@ public class GameSimulatorTest {
 	}
 
 	@Test
+	public void pulsarTest() throws IOException {
+		test("pulsar", 3, new Rectangle(0, 0, 1, 1), true, "default");
+	}
+
+	@Test
 	public void failTest() throws IOException {
 		try {
 			test("fail", 2, new Rectangle(0, 0, 1, 1), true, "default");
