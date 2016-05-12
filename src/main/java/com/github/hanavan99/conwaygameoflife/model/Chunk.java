@@ -62,7 +62,7 @@ public class Chunk implements ISerializable {
 		if ( y < 0 || y >= 64 ) {
 			throw new IllegalArgumentException("y must be [0, 64)");
 		}
-		return (data[y] & (1 << x)) != 0;
+		return (data[y] & (1L << x)) != 0;
 	}
 
 	/**
@@ -84,9 +84,9 @@ public class Chunk implements ISerializable {
 			throw new IllegalArgumentException("y must be [0, 64)");
 		}
 		if ( v ) {
-			data[y] |= (1 << x);
+			data[y] |= (1L << x);
 		} else {
-			data[y] &= ~(1 << x);
+			data[y] &= ~(1L << x);
 		}
 	}
 
@@ -128,7 +128,11 @@ public class Chunk implements ISerializable {
 
 	@Override
 	public Chunk clone() {
-		return new Chunk(player.clone(), x, y, data.clone(), generation);
+		long[] clone = new long[64];
+		for ( int i = 0; i < 64; ++i ) {
+			clone[i] = data[i];
+		}
+		return new Chunk(player.clone(), x, y, clone, generation);
 	}
 
 	@Override

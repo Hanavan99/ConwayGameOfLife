@@ -25,6 +25,7 @@ class GameSimulator {
 		for ( Chunk chunk : game.getChunks() ) {
 			clone.getChunks().add(chunk.clone());
 		}
+		GameView cloneView = new GameView(clone);
 		for ( Chunk chunk : clone.getChunks() ) {
 			for ( int x = 0; x < 64; ++x ) {
 				for ( int y = 0; y < 64; ++y ) {
@@ -32,18 +33,19 @@ class GameSimulator {
 					int gy = chunk.getY() * 64 + y;
 					Player[] neighbors = view.getNeighbors(gx, gy);
 					if ( view.getTilePlayer(gx, gy) == null ) {
-						if ( neighbors.length < 2 || neighbors.length > 3 ) {
-							view.kill(gx, gy);
+						if ( neighbors.length == 3 ) {
+							if ( neighbors[0].equals(neighbors[1]) || neighbors[0].equals(neighbors[2]) ) {
+								cloneView.setTile(gx, gy, neighbors[0], true);
+							} else if ( neighbors[1].equals(neighbors[2]) ) {
+								cloneView.setTile(gx, gy, neighbors[1], true);
+							}
 						}
-					} else if ( neighbors.length == 3 ) {
-						if ( neighbors[0].equals(neighbors[1]) || neighbors[0].equals(neighbors[2]) ) {
-							view.setTile(gx, gy, neighbors[0], true);
-						} else if ( neighbors[1].equals(neighbors[2]) ) {
-							view.setTile(gx, gy, neighbors[1], true);
-						}
+					} else if ( neighbors.length < 2 || neighbors.length > 3 ) {
+						cloneView.kill(gx, gy);
 					}
 				}
 			}
+			chunk.setGeneration(chunk.getGeneration() + 1);
 			++processed;
 		}
 		game.getChunks().clear();

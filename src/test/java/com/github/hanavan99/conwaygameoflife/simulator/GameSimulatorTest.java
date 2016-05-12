@@ -4,23 +4,58 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.github.hanavan99.conwaygameoflife.model.Chunk;
 import com.github.hanavan99.conwaygameoflife.model.Game;
+import com.github.hanavan99.conwaygameoflife.model.GameView;
 import com.github.hanavan99.conwaygameoflife.model.Player;
 
 public class GameSimulatorTest {
+	private static final boolean debug = false;
+	private static PrintStream debugStream;
+
+	@BeforeClass
+	public static void setup() throws IOException {
+		if ( debug ) {
+			debugStream = new PrintStream(new File("debug.log"));
+		}
+	}
+
+	@AfterClass
+	public static void cleanup() {
+		if ( debug ) {
+			debugStream.close();
+		}
+	}
+
+	private void printField(Game game) {
+		GameView view = new GameView(game);
+		Rectangle size = view.totalSizeExact();
+		debugStream.printf("(%d, %d) -> (%d, %d):\n", (int) size.getMinX(), (int) size.getMinY(), (int) size.getMaxX(),
+				(int) size.getMaxY());
+		for ( int y = (int) size.getMinY(); y <= size.getMaxY(); ++y ) {
+			for ( int x = (int) size.getMinX(); x <= size.getMaxX(); ++x ) {
+				debugStream.print(view.getTilePlayer(x, y) == null ? ' ' : '#');
+			}
+			debugStream.println();
+		}
+	}
+
 	private Chunk getChunk(String name, String player, int generation, Point location) throws IOException {
 		try ( InputStream in = getClass().getResourceAsStream(
-				String.format("simulatorTests/%s/%d/%s/%d,%d", name, generation, player, location.x, location.y))) {
+				String.format("/simulatorTests/%s/%d/%s/%d,%d", name, generation, player, location.x, location.y))) {
 			if ( in == null ) {
 				return null;
 			}
@@ -50,17 +85,28 @@ public class GameSimulatorTest {
 		return chunks;
 	}
 
-	private void test(String name, int generations, Rectangle location, boolean repeat, List<String> players, Game game)
-			throws IOException {
+	private void test(String name, int generations, Rectangle location, boolean repeat, List<String> players, Game game,
+			int genStart) throws IOException {
 		GameSimulator simulator = new GameSimulator(game);
-		for ( int generation = 1; generation < generations; ++generation ) {
+		for ( int generation = genStart; generation < generations; ++generation ) {
 			Game target = new Game();
 			target.getChunks().addAll(getChunks(name, players, location, generation));
 			simulator.tick();
+			game.clearHashes();
+			if ( debug ) {
+				debugStream.printf("Test %s in generation %d:\n", name, generation);
+				printField(game);
+				debugStream.println("Expected:");
+				printField(target);
+				debugStream.println();
+			}
 			Assert.assertEquals(target, game);
 		}
 		if ( repeat ) {
-			test(name, generations, location, false, players, game);
+			for ( Chunk chunk : game.getChunks() ) {
+				chunk.setGeneration(-1);
+			}
+			test(name, generations, location, false, players, game, 0);
 		}
 	}
 
@@ -69,7 +115,13 @@ public class GameSimulatorTest {
 		List<String> playerList = Arrays.asList(players);
 		Game game = new Game();
 		game.getChunks().addAll(getChunks(name, playerList, location, 0));
-		test(name, generations, location, repeat, playerList, game);
+		if ( debug ) {
+			debugStream.printf("Test %s initial pattern (testing for %d generations%s):\n", name, generations,
+					repeat ? " with repeat" : "");
+			printField(game);
+			debugStream.println();
+		}
+		test(name, generations, location, repeat, playerList, game, 1);
 	}
 
 	@Test
@@ -110,5 +162,16 @@ public class GameSimulatorTest {
 	@Test
 	public void beaconTest() throws IOException {
 		test("beacon", 2, new Rectangle(0, 0, 1, 1), true, "default");
+	}
+
+	@Test
+	public void failTest() throws IOException {
+		try {
+			test("fail", 2, new Rectangle(0, 0, 1, 1), true, "default");
+		} catch ( Throwable ex ) {
+			return;
+		}
+		blockTest(); // Make sure it is not the simulator that is not working
+		Assert.fail("Test code does not work");
 	}
 }

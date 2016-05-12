@@ -237,6 +237,15 @@ public class Game implements ISerializable {
 		return playerListHashes.get(generation);
 	}
 
+	/**
+	 * Clears the list of hashes
+	 */
+	public void clearHashes() {
+		hashes.clear();
+		chunkListHashes.clear();
+		playerListHashes.clear();
+	}
+
 	@Override
 	public Game clone() {
 		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
