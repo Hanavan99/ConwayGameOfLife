@@ -168,6 +168,11 @@ public class GameSimulatorTest {
 	public void pulsarTest() throws IOException {
 		test("pulsar", 3, new Rectangle(0, 0, 1, 1), true, "default");
 	}
+	
+    @Test
+    public void pentadecathlonTest() throws IOException {
+        test("pentadecathlon", 15, new Rectangle(0, 0, 1, 1), true, "default");
+    }
 
 	@Test
 	public void failTest() throws IOException {
