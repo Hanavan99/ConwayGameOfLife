@@ -20,6 +20,11 @@
 			<AppenderRef ref="LogFile" level="debug" />
 			<AppenderRef ref="GUI" level="trace" />
 		</Root>
+		<Logger name="com.github.hanavan99.conwaygameoflife.main.Main" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="LogFile" />
+			<AppenderRef ref="GUI" />
+		</Logger>
 		<!--
 			How to debug a certain class (or package):
 			

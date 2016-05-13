@@ -1,6 +1,7 @@
 package com.github.hanvan99.conwaygameoflife.main;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +23,12 @@ public class UIMain {
 		simulator.start();
 		client.start();
 		final UIModel model = new UIModel(game);
+		try {
+			model.parse();
+		} catch ( IOException ex ) {
+			log.catching(ex);
+		}
+		log.debug(model);
 		final UIView view = new UIView(model);
 		final UIController ctrlr = new UIController(model);
 		EventQueue.invokeLater(view);

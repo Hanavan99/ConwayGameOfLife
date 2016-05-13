@@ -8,6 +8,7 @@ import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
 import com.github.hanavan99.conwaygameoflife.ui.view.layout.UILookAndFeel;
 
 public class UIView implements Runnable {
+	public static UIModel model;
 	
 	@Override
 	public void run() {
@@ -23,5 +24,6 @@ public class UIView implements Runnable {
 	}
 	
 	public UIView(UIModel model) {
+		UIView.model = model;
 	}
 }

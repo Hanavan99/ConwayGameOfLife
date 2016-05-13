@@ -7,7 +7,13 @@ import java.awt.LayoutManager2;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.github.hanavan99.conwaygameoflife.ui.view.UIView;
+
 final class UILayout implements LayoutManager2 {
+	private static final Logger log = LogManager.getLogger();
     private final UIManager              manager;
     private final Map<String, Component> components;
     
@@ -39,11 +45,19 @@ final class UILayout implements LayoutManager2 {
     
     @Override
     public void layoutContainer(Container parent) {
-        for ( String name : components.keySet() ) {
-            UIConfig config = manager.getUIConfig(name);
+        top: for ( String name : components.keySet() ) {
+            //UIConfig config = manager.getUIConfig(name);
             Component comp = components.get(name);
-            comp.setFont(config.getFont());
-            config.applyBoundsToComponent(comp);
+            //comp.setFont(config.getFont());
+            //config.applyBoundsToComponent(comp);
+            for ( com.github.hanavan99.conwaygameoflife.ui.model.Component c : UIView.model.getThemes().get(0).getPanels().get(0).getComponents() ) {
+            	if ( c.getName().equals(name) ) {
+            		log.trace("Applying layout to component {}", name);
+            		c.apply(comp);
+            		continue top;
+            	}
+            }
+            log.warn("Unable to find layout settings for component {}", name);
         }
         parent.repaint();
     }
