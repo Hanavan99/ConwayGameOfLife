@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -69,5 +72,17 @@ public final class LogAppender extends AbstractAppender {
 			e.printStackTrace();
 		}
 		this.logbox = logbox;
+		try {
+			Field field = logger.getClass().getDeclaredField("dumplog");
+			field.setAccessible(true);
+			JButton dumplog = (JButton) field.get(logger);
+			field = logger.getClass().getDeclaredField("gui");
+			field.setAccessible(true);
+			JFrame gui = (JFrame) field.get(logger);
+			gui.remove(dumplog);
+		} catch ( ReflectiveOperationException e ) {
+			System.err.println("Unable to remove the log dump box");
+			e.printStackTrace();
+		}
 	}
 }
