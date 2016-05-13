@@ -62,9 +62,12 @@ class NetworkClient implements Runnable {
 	public void send(IPacket packet) throws IOException {
 		try ( ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
 			try ( DataOutputStream data = new DataOutputStream(buffer)) {
+				data.writeByte(PacketFactory.getId(packet));
 				packet.save(data);
 			}
 			send(buffer.toByteArray());
+		} catch ( ClassNotFoundException ex ) {
+			throw new IOException(ex);
 		}
 	}
 
