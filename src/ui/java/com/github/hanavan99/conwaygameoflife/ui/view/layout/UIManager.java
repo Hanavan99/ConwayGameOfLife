@@ -44,6 +44,8 @@ public class UIManager {
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 160, 200, 200)));
 		layout_default.put("navigation_panel", new UIConfig(new Color(0, 125, 0), null,
 				() -> new Rectangle(getRelLayoutWidth(0.8d) - 100, getRelLayoutHeight(0.8d) + 120, 200, 30)));
+		layout_default.put("navigation_mainmenu", new UIConfig(null, null,
+				() -> new Rectangle(getRelLayoutWidth(0.5d) - 50, 0, 100, 30)));
 		UIs.put("default", layout_default);
 		if (comp instanceof JComponent) {
 			((JComponent) comp).setLayout(new UILayout(this));
