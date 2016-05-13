@@ -1,5 +1,6 @@
 package com.github.hanavan99.conwaygameoflife.ui.view.layout;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -9,6 +10,7 @@ import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashMap;
+
 import javax.swing.JComponent;
 
 public class UIManager {
@@ -40,8 +42,8 @@ public class UIManager {
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 120, 200, 30)));
 		layout_default.put("main_gif", new UIConfig(null, null,
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 100, getRelLayoutHeight(0.2d) + 160, 200, 200)));
-		layout_default.put("navigation_panel", new UIConfig(null, null, () -> new Rectangle(getRelLayoutWidth(0.8d),
-				getRelLayoutWidth(0.9d), getRelLayoutWidth(0.2d), getRelLayoutHeight(0.1d))));
+		layout_default.put("navigation_panel", new UIConfig(new Color(0, 125, 0), null,
+				() -> new Rectangle(getRelLayoutWidth(0.8d) - 100, getRelLayoutHeight(0.8d) + 120, 200, 30)));
 		UIs.put("default", layout_default);
 		if (comp instanceof JComponent) {
 			((JComponent) comp).setLayout(new UILayout(this));
