@@ -20,6 +20,22 @@ public class Theme {
 		return panels;
 	}
 
+	/**
+	 * Gets a panel by its name
+	 * 
+	 * @param name
+	 *            The name of the panel
+	 * @return The panel, or <code>null</code> if the panel could not be found
+	 */
+	public Panel getPanel(String name) {
+		for ( Panel panel : panels ) {
+			if ( panel.getName().equals(name) ) {
+				return panel;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

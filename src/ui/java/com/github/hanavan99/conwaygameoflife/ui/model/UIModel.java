@@ -30,6 +30,7 @@ public class UIModel {
 	private static final Logger log = LogManager.getLogger();
 	private final List<Extension> extensions;
 	private final List<Theme> themes;
+	private Theme currentTheme;
 
 	private Extension parseExtension(Element element) throws ClassNotFoundException {
 		Extension extension = new Extension();
@@ -159,7 +160,7 @@ public class UIModel {
 		for ( int i = 0; i < list.getLength(); ++i ) {
 			Node node = list.item(i);
 			if ( node instanceof Element ) {
-				theme.getPanels().add(parsePanel(element));
+				theme.getPanels().add(parsePanel((Element) node));
 			}
 		}
 		return theme;
@@ -192,6 +193,38 @@ public class UIModel {
 	}
 
 	/**
+	 * Gets the current theme, or <code>null</code> if no themes are loaded
+	 * 
+	 * @return The current theme
+	 */
+	public Theme getCurrentTheme() {
+		return currentTheme;
+	}
+
+	/**
+	 * Sets the current theme
+	 * 
+	 * @param currentTheme
+	 *            The new current theme
+	 */
+	public void setCurrentTheme(Theme currentTheme) {
+		if ( !themes.contains(currentTheme) ) {
+			throw new IllegalArgumentException("Theme is not registered with UI model yet");
+		}
+		this.currentTheme = currentTheme;
+	}
+
+	/**
+	 * Sets the current theme
+	 * 
+	 * @param index
+	 *            The index of the new current theme
+	 */
+	public void setCurrentTheme(int index) {
+		setCurrentTheme(themes.get(index));
+	}
+
+	/**
 	 * Parses the layout.xml file
 	 * 
 	 * @throws IOException
@@ -203,6 +236,11 @@ public class UIModel {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(getClass().getResourceAsStream("/layout.xml"));
 			parseDocument(doc.getDocumentElement());
+			if ( themes.size() > 0 ) {
+				currentTheme = themes.get(0);
+			} else {
+				currentTheme = null;
+			}
 		} catch ( ParserConfigurationException | SAXException ex ) {
 			throw new IOException(ex);
 		}

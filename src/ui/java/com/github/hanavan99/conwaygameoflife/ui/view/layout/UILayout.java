@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.hanavan99.conwaygameoflife.ui.model.Panel;
 import com.github.hanavan99.conwaygameoflife.ui.view.UIView;
 
 final class UILayout implements LayoutManager2 {
@@ -43,24 +44,38 @@ final class UILayout implements LayoutManager2 {
         return new Dimension(640, 480);
     }
     
-    @Override
-    public void layoutContainer(Container parent) {
-        top: for ( String name : components.keySet() ) {
-            //UIConfig config = manager.getUIConfig(name);
-            Component comp = components.get(name);
-            //comp.setFont(config.getFont());
-            //config.applyBoundsToComponent(comp);
-            for ( com.github.hanavan99.conwaygameoflife.ui.model.Component c : UIView.model.getThemes().get(0).getPanels().get(0).getComponents() ) {
-            	if ( c.getName().equals(name) ) {
-            		log.trace("Applying layout to component {}", name);
-            		c.apply(comp);
-            		continue top;
-            	}
-            }
-            log.warn("Unable to find layout settings for component {}", name);
-        }
-        parent.repaint();
-    }
+	@Override
+	public void layoutContainer(Container parent) {
+		String panel;
+		if ( parent instanceof IDynamicPanelName ) {
+			panel = ((IDynamicPanelName) parent).getPanelName();
+		} else {
+			Class<?> cls = parent.getClass();
+			PanelName attr = cls.getAnnotation(PanelName.class);
+			if ( attr == null ) {
+				panel = cls.getSimpleName();
+			} else {
+				panel = attr.value();
+			}
+		}
+		Panel p = UIView.model.getCurrentTheme().getPanel(panel);
+		if ( p == null ) {
+			log.fatal("Unable to find any layout settings for panel {}", panel);
+		} else {
+			top: for ( String name : components.keySet() ) {
+				Component comp = components.get(name);
+				for ( com.github.hanavan99.conwaygameoflife.ui.model.Component c : p.getComponents() ) {
+					if ( c.getName().equals(name) ) {
+						log.trace("Applying layout to component {}", name);
+						c.apply(comp);
+						continue top;
+					}
+				}
+				log.warn("Unable to find layout settings for component {}", name);
+			}
+		}
+		parent.repaint();
+	}
     
     @Override
     public void addLayoutComponent(Component comp, Object constraints) {
