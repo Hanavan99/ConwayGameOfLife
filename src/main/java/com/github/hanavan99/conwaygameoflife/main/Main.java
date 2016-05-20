@@ -12,10 +12,18 @@ import com.github.hanavan99.conwaygameoflife.model.Game;
 import com.github.hanavan99.conwaygameoflife.network.Networking;
 import com.github.hanavan99.conwaygameoflife.simulator.Simulator;
 
+/**
+ * The main entry point of the game
+ * 
+ * @author Zach Deibert
+ */
 public class Main {
 	private static final Logger log = LogManager.getLogger();
 
-	private static void serverMain() {
+	/**
+	 * Launches the server in a new thread
+	 */
+	public static void serverMain() {
 		final Game game = new Game();
 		final Simulator simulator = new Simulator(game);
 		final Networking server = new Networking(game);
@@ -26,10 +34,38 @@ public class Main {
 		game.getServer().setState(ConnectionState.Connecting);
 	}
 
-	private static void clientMain(Method main) throws ReflectiveOperationException {
+	/**
+	 * Launches the client in a new thread
+	 * 
+	 * @param main
+	 *            The main class from the UI source set (
+	 *            {@link com.github.hanvan99.conwaygameoflife.main.UIMain})
+	 * @throws ReflectiveOperationException
+	 *             If an error occurred while starting the client threads
+	 */
+	public static void clientMain(Method main) throws ReflectiveOperationException {
 		main.invoke(null);
 	}
 
+	/**
+	 * Launches the client in a new thread
+	 * 
+	 * @throws ReflectiveOperationException
+	 *             If an error occurred while starting the client threads
+	 */
+	public static void clientMain() throws ReflectiveOperationException {
+		Class<?> cls = Class.forName("com.github.hanvan99.conwaygameoflife.main.UIMain");
+		Method method = cls.getMethod("main");
+		log.info("UI source set found; launching client");
+		clientMain(method);
+	}
+
+	/**
+	 * The command line entry point of the program
+	 * 
+	 * @param args
+	 *            The command-line arguments
+	 */
 	public static void main(String[] args) {
 		log.info("Starting game...");
 		if ( GraphicsEnvironment.isHeadless() ) {
@@ -37,10 +73,7 @@ public class Main {
 			serverMain();
 		} else {
 			try {
-				Class<?> cls = Class.forName("com.github.hanvan99.conwaygameoflife.main.UIMain");
-				Method method = cls.getMethod("main");
-				log.info("UI source set found; launching client");
-				clientMain(method);
+				clientMain();
 			} catch ( final ReflectiveOperationException ex ) {
 				log.catching(Level.DEBUG, ex);
 				log.info("UI source set not included in jar; launching server");

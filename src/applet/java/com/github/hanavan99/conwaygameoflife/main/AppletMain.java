@@ -6,6 +6,11 @@ import java.awt.BorderLayout;
 import com.github.hanavan99.conwaygameoflife.ui.view.MainPanel;
 import com.github.hanavan99.conwaygameoflife.ui.view.PanelManager;
 
+/**
+ * Main class for the applet
+ * 
+ * @author Zach Deibert
+ */
 public final class AppletMain extends Applet {
 	private static final long serialVersionUID = 8187756037896569937L;
 

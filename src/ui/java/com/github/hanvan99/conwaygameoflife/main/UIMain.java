@@ -13,9 +13,18 @@ import com.github.hanavan99.conwaygameoflife.ui.controller.UIController;
 import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
 import com.github.hanavan99.conwaygameoflife.ui.view.UIView;
 
+/**
+ * Main class for the UI layer. This is called from the main main class via
+ * reflection.
+ * 
+ * @author Zach Deibert
+ */
 public class UIMain {
 	private static final Logger log = LogManager.getLogger();
 
+	/**
+	 * The main entry point for the client UI for the game.
+	 */
 	public static void main() {
 		final Game game = new Game();
 		final Simulator simulator = new Simulator(game);

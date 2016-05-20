@@ -23,12 +23,28 @@ import com.guilogger.logging.LogType;
 import com.guilogger.ui.LogBox;
 import com.guilogger.util.LoggingException;
 
+/**
+ * Appends the logging calls from log4j2 to the {@link GUILogger}
+ * 
+ * @author Zach Deibert
+ */
 @Plugin(name = "GUILogger", category = "Core", elementType = "appender", printObject = true)
 public final class LogAppender extends AbstractAppender {
 	private static final long serialVersionUID = -5763466241410255237L;
 	private final GUILogger logger;
 	private final LogBox logbox;
 
+	/**
+	 * Creates a new instance of the appender for use by log4j2
+	 * 
+	 * @param name
+	 *            The name of the logger
+	 * @param layout
+	 *            The layout to log in
+	 * @param filter
+	 *            The filter for logging statements
+	 * @return The new appender for use by log4j2
+	 */
 	@PluginFactory
 	public static LogAppender createAppender(@PluginAttribute("name") String name,
 			@PluginElement("Layout") Layout<? extends Serializable> layout, @PluginElement("Filters") Filter filter) {
