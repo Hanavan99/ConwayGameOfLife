@@ -11,11 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.github.hanavan99.conwaygameoflife.ui.model.Panel;
-import com.github.hanavan99.conwaygameoflife.ui.view.UIView;
+import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
 
 final class UILayout implements LayoutManager2 {
 	private static final Logger log = LogManager.getLogger();
     private final UIManager              manager;
+    private final UIModel model;
     private final Map<String, Component> components;
     
     @Override
@@ -58,7 +59,7 @@ final class UILayout implements LayoutManager2 {
 				panel = attr.value();
 			}
 		}
-		Panel p = UIView.model.getCurrentTheme().getPanel(panel);
+		Panel p = model.getCurrentTheme().getPanel(panel);
 		if ( p == null ) {
 			log.fatal("Unable to find any layout settings for panel {}", panel);
 		} else {
@@ -104,8 +105,9 @@ final class UILayout implements LayoutManager2 {
     @Override
     public void invalidateLayout(Container target) {}
     
-    UILayout(UIManager manager) {
+    UILayout(UIManager manager, UIModel model) {
         this.manager = manager;
+        this.model = model;
         components = new HashMap<String, Component>();
     }
 }

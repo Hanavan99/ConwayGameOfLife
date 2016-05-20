@@ -13,18 +13,22 @@ import java.util.HashMap;
 
 import javax.swing.JComponent;
 
+import com.github.hanavan99.conwaygameoflife.ui.model.UIModel;
+
 public class UIManager {
 
 	private HashMap<String, HashMap<String, UIConfig>> UIs = new HashMap<String, HashMap<String, UIConfig>>();
 	private String currentLayout = "default";
 	private int currentLayoutID = 0;
 	private final Component comp;
+	private final UIModel model;
 
-	public UIManager(Component comp) {
+	public UIManager(Component comp, UIModel model) {
 		if (!(comp instanceof JComponent || comp instanceof Container)) {
 			throw new IllegalArgumentException("Invalid component to manage");
 		}
 		this.comp = comp;
+		this.model = model;
 		resetUI();
 	}
 
@@ -48,10 +52,10 @@ public class UIManager {
 				() -> new Rectangle(getRelLayoutWidth(0.5d) - 50, 0, 100, 30)));
 		UIs.put("default", layout_default);
 		if (comp instanceof JComponent) {
-			((JComponent) comp).setLayout(new UILayout(this));
+			((JComponent) comp).setLayout(new UILayout(this, model));
 		} else if (comp instanceof Container) {
 			Runnable relayout = () -> {
-				UILayout layout = new UILayout(this);
+				UILayout layout = new UILayout(this, model);
 				for (Component c : ((Container) comp).getComponents()) {
 					layout.addLayoutComponent(c, c.getName());
 				}
