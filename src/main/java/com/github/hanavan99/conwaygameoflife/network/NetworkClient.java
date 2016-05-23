@@ -40,15 +40,18 @@ class NetworkClient implements Runnable {
 	 */
 	public void send(byte[] data) throws IOException {
 		if ( data.length >= NetworkConfig.MINIMUM_COMPRESSION_SIZE ) {
+			log.trace("Writing compressed packet of length {}", data.length);
 			out.writeBoolean(true);
 			try ( GZIPOutputStream gz = new GZIPOutputStream(out)) {
 				gz.write(data);
 			}
 		} else {
+			log.trace("Writing raw packet of length {}", data.length);
 			out.writeBoolean(false);
 			out.write(data);
 		}
 		out.flush();
+		log.trace("Done writing");
 	}
 
 	/**
@@ -80,11 +83,14 @@ class NetworkClient implements Runnable {
 			while ( sock.isConnected() ) {
 				boolean isCompressed = in.readBoolean();
 				if ( isCompressed ) {
+					log.trace("Reading compressed packet");
 					GZIPInputStream gz = new GZIPInputStream(in);
 					handleMessage(gz);
 				} else {
+					log.trace("Reading raw packet");
 					handleMessage(in);
 				}
+				log.trace("Packet read");
 			}
 		} catch ( IOException ex ) {
 			log.catching(ex);
@@ -94,6 +100,7 @@ class NetworkClient implements Runnable {
 				log.catching(e);
 			}
 		}
+		log.debug("Socket disconnected");
 	}
 
 	private void handleMessage(InputStream in) throws IOException {
@@ -105,7 +112,9 @@ class NetworkClient implements Runnable {
 		}
 		byte id = data.readByte();
 		IPacket packet = PacketFactory.construct(id);
+		log.trace("Loading data from packet id {}", id);
 		packet.load(data);
+		log.trace("Handling message");
 		handler.handle(packet, this);
 	}
 

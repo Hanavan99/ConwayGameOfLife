@@ -6,7 +6,10 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.Socket;
+import java.util.function.Supplier;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -17,6 +20,8 @@ import com.github.hanavan99.conwaygameoflife.network.packets.HelloPacket;
 import com.github.hanavan99.conwaygameoflife.network.packets.IPacket;
 
 public class NetworkClientTest {
+	private static final Logger log = LogManager.getLogger();
+	private static final long MAX_LATENCY = 1000;
 	private static Game game;
 	private static Networking net;
 	private static NetworkClient client;
@@ -84,6 +89,7 @@ public class NetworkClientTest {
 
 	@AfterClass
 	public static void cleanup() throws IOException, InterruptedException {
+		log.warn("Closing streams forcefully; expect IOExceptions");
 		serverThread.interrupt();
 		clientThread.interrupt();
 		serverThread.join();
@@ -96,6 +102,17 @@ public class NetworkClientTest {
 		net = null;
 		game = null;
 	}
+	
+	private void testSent(IPacket packet, Supplier<IPacket> received) throws InterruptedException {
+		long end = System.currentTimeMillis() + MAX_LATENCY;
+		IPacket got;
+		while ( (got = received.get()) == null ) {
+			Assert.assertTrue("Send timed out", end > System.currentTimeMillis());
+			Thread.sleep(1);
+		}
+		Assert.assertEquals(packet, got);
+		Assert.assertNotSame(packet, got);
+	}
 
 	@Test
 	public void testSend() throws IOException, InterruptedException {
@@ -104,16 +121,14 @@ public class NetworkClientTest {
 		IPacket packet = new HelloPacket(42);
 		client.send(packet);
 		clientOut.flush();
+		testSent(packet, () -> serverPacket);
 		Assert.assertNull(clientPacket);
-		Assert.assertEquals(packet, serverPacket);
-		Assert.assertNotSame(packet, serverPacket);
 		IPacket oldSent = serverPacket;
 		serverPacket = null;
 		server.send(packet);
 		serverOut.flush();
+		testSent(packet, () -> clientPacket);
 		Assert.assertNull(serverPacket);
-		Assert.assertEquals(packet, clientPacket);
-		Assert.assertNotSame(packet, serverPacket);
 		Assert.assertNotSame(oldSent, clientPacket);
 	}
 }
