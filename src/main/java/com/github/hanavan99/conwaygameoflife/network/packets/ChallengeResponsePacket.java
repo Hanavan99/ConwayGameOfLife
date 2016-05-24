@@ -18,7 +18,7 @@ public class ChallengeResponsePacket implements IPacket {
 
 	@Override
 	public void load(DataInputStream data) throws IOException {
-		time = data.readLong();
+		time = data.readDouble();
 	}
 
 	@Override
