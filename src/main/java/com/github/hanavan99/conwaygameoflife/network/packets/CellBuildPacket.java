@@ -44,7 +44,11 @@ public class CellBuildPacket implements IPacket {
 
 	@Override
 	public IPacket clone() {
-		return null;
+		List<Chunk> list = new ArrayList<Chunk>();
+		for ( Chunk chunk : chunks ) {
+			list.add(chunk.clone());
+		}
+		return new CellBuildPacket(list);
 	}
 
 	@Override
