@@ -60,8 +60,10 @@ abstract class AbstractSerializableListImagingPacket<T extends ISerializable> ex
 	@Override
 	public AbstractImagingPacket<List<T>> clone() {
 		List<T> list = new ArrayList<T>();
-		for ( T e : obj ) {
-			list.add((T) e.clone());
+		if ( obj != null ) {
+			for ( T e : obj ) {
+				list.add((T) e.clone());
+			}
 		}
 		return clone(list);
 	}

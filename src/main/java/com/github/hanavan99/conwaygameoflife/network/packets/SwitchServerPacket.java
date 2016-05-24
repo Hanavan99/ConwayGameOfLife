@@ -37,7 +37,7 @@ public class SwitchServerPacket implements IPacket {
 
 	@Override
 	public IPacket clone() {
-		return new SwitchServerPacket(server.clone());
+		return new SwitchServerPacket(server == null ? null : server.clone());
 	}
 
 	@Override

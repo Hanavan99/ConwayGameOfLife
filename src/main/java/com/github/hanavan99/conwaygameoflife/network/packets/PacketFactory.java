@@ -41,6 +41,7 @@ public abstract class PacketFactory {
 		register(new MessagePacket(null));
 		register(new SetSpeedPacket(0));
 		register(new KetchupPacket());
+		register(new ChallengeResponsePacket(0));
 	}
 
 	/**

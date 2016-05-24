@@ -15,7 +15,7 @@ public class ChunkImagePacket extends AbstractSerializableImagingPacket<Chunk> {
 
 	@Override
 	public AbstractImagingPacket<Chunk> clone() {
-		return new ChunkImagePacket(obj.clone(), deleted);
+		return new ChunkImagePacket(obj == null ? null : obj.clone(), deleted);
 	}
 
 	/**

@@ -19,6 +19,7 @@ dependencies {
 	uiCompile "org.apache.logging.log4j:log4j-core:2.5"
 	deployCompile "com.sparkjava:spark-core:2.2"
 	testCompile "junit:junit:4.12"
+	testCompile "org.reflections:reflections:0.9.10"
 	appletCompile sourceSets.ui.output
 	appletCompile sourceSets.main.output
 	uiCompile sourceSets.main.output

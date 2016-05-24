@@ -25,7 +25,7 @@ public class ChallengePacket implements IPacket {
 
 	@Override
 	public ChallengePacket clone() {
-		return new ChallengePacket(game.clone(), targetGeneration);
+		return new ChallengePacket(game == null ? null : game.clone(), targetGeneration);
 	}
 
 	@Override
