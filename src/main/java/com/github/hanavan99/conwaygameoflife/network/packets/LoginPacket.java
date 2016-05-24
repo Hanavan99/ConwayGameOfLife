@@ -1,6 +1,5 @@
 package com.github.hanavan99.conwaygameoflife.network.packets;
 
-import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,14 +24,12 @@ public class LoginPacket implements IPacket {
 
 	@Override
 	public void load(DataInputStream data) throws IOException {
-		player.setName(data.readUTF());
-		player.setColor(new Color(data.readInt()));
+		player.load(data);
 	}
 
 	@Override
 	public void save(DataOutputStream data) throws IOException {
-		data.writeUTF(player.getName());
-		data.writeInt(player.getColor().getRGB());
+		player.save(data);
 	}
 
 	@Override
