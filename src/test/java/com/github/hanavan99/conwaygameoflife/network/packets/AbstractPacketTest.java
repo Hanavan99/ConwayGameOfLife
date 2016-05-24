@@ -15,6 +15,13 @@ public abstract class AbstractPacketTest {
 	protected abstract IPacket packetA();
 	protected abstract IPacket packetB();
 	
+	protected void checkInputs(IPacket a, IPacket b) {
+		Assert.assertNotNull(a);
+		Assert.assertNotNull(b);
+		Assert.assertNotSame(a, b);
+		Assert.assertNotEquals(a, b);
+	}
+	
 	protected <T> List<T> asList(@SuppressWarnings("unchecked") T... objs) {
 		List<T> list = new ArrayList<T>();
 		for ( T obj : objs ) {
@@ -24,10 +31,7 @@ public abstract class AbstractPacketTest {
 	}
 	
 	private void testSerialization(IPacket a, IPacket b) throws IOException {
-		Assert.assertNotNull(a);
-		Assert.assertNotNull(b);
-		Assert.assertNotSame(a, b);
-		Assert.assertNotEquals(a, b);
+		checkInputs(a, b);
 		try ( ByteArrayOutputStream out = new ByteArrayOutputStream() ) {
 			try ( DataOutputStream data = new DataOutputStream(out) ) {
 				a.save(data);
@@ -64,13 +68,10 @@ public abstract class AbstractPacketTest {
 	public void testHashCode() {
 		IPacket a = packetA();
 		IPacket b = packetB();
-		Assert.assertNotNull(a);
-		Assert.assertNotNull(b);
-		Assert.assertNotSame(a, b);
-		Assert.assertNotEquals(a, b);
+		checkInputs(a, b);
 		Assert.assertEquals(a.hashCode(), a.hashCode());
 		Assert.assertEquals(b.hashCode(), b.hashCode());
-		Assert.assertNotEquals(a.hashCode(), b.hashCode());
+		Assert.assertEquals(a.hashCode() == b.hashCode(), a.equals(b));
 		Assert.assertEquals(a.hashCode(), a.clone().hashCode());
 		Assert.assertEquals(b.hashCode(), b.clone().hashCode());
 	}

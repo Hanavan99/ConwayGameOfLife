@@ -45,4 +45,9 @@ public class KetchupPacket implements IPacket {
 		// KetchupPacket other = (KetchupPacket) obj;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "KetchupPacket []";
+	}
 }
