@@ -91,7 +91,11 @@ public class Game implements ISerializable {
 	 *            The message
 	 */
 	public void setMessage(String message) {
-		this.message = message;
+		if ( message == null ) {
+			this.message = "";
+		} else {
+			this.message = message;
+		}
 	}
 
 	/**
@@ -248,9 +252,9 @@ public class Game implements ISerializable {
 
 	@Override
 	public Game clone() {
-		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(), challenge.clone(),
-				message, new ArrayList<Chunk>(), generationPeriod, changeAccepted,
-				new HashMap<GenerationHashKey, Integer>(), new HashMap<Integer, Integer>(),
+		Game game = new Game(server.clone(), new ArrayList<Player>(), new ArrayList<Chunk>(),
+				challenge == null ? null : challenge.clone(), message, new ArrayList<Chunk>(), generationPeriod,
+				changeAccepted, new HashMap<GenerationHashKey, Integer>(), new HashMap<Integer, Integer>(),
 				new HashMap<Integer, Integer>());
 		for ( Player player : players ) {
 			game.players.add(player.clone());
@@ -498,6 +502,7 @@ public class Game implements ISerializable {
 		hashes = new HashMap<GenerationHashKey, Integer>();
 		chunkListHashes = new HashMap<Integer, Integer>();
 		playerListHashes = new HashMap<Integer, Integer>();
+		message = "";
 	}
 
 	/**
